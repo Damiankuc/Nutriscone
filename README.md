@@ -71,6 +71,9 @@ npx playwright show-report
 ```
 
 ## 👥 Equipo / Autores
-- **[Tu Nombre / Nombres de los integrantes]**
+- Caminos, Roberto Damian
+- Meza, Santiago
+- Codermatz, Valentino
+- Sosa Wilka, Francisco
 - *Materia / Proyecto Universitario*
 
