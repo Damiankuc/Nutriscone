@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Scones-Scoring 📊
 
-## Getting Started
+Este proyecto es un trabajo práctico universitario. Se trata de una aplicación web para el análisis, gestión y visualización de datos, construida con tecnologías web modernas y orientada a la calidad y el rendimiento.
 
-First, run the development server:
+## 🚀 Tecnologías Utilizadas
+
+- **Frontend:** [Next.js](https://nextjs.org/) (App Router) y [React](https://reactjs.org/)
+- **Estilos:** [Tailwind CSS](https://tailwindcss.com/)
+- **Base de Datos & Backend:** [Supabase](https://supabase.com/)
+- **Visualización de Datos:** [Chart.js](https://www.chartjs.org/) y [react-chartjs-2](https://react-chartjs-2.js.org/) (Gráficos de torta y barras)
+- **Testing (E2E):** [Playwright](https://playwright.dev/)
+
+## 📋 Requisitos Previos
+
+Asegúrate de tener instalado en tu sistema:
+- [Node.js](https://nodejs.org/) (versión 18.x o superior recomendada)
+- Un gestor de paquetes como `npm` (viene con Node.js)
+
+## 🛠️ Instalación y Configuración Local
+
+Sigue estos pasos para levantar el entorno de desarrollo localmente:
+
+1. **Clonar el repositorio** (Si aplica)
+   ```bash
+   git clone <URL_DEL_REPOSITORIO>
+   cd Scones-Scoring
+   ```
+
+2. **Instalar las dependencias del proyecto**
+   ```bash
+   npm install
+   ```
+
+3. **Configurar las variables de entorno**
+   - El proyecto necesita conectarse a una base de datos de Supabase.
+   - Crea o edita el archivo `.env.local` en la raíz del proyecto y añade tus credenciales:
+     ```env
+     NEXT_PUBLIC_SUPABASE_URL=tu-url-de-supabase
+     NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key-de-supabase
+     ```
+
+4. **Instalar navegadores para Playwright** (Necesario para correr los tests)
+   ```bash
+   npx playwright install --with-deps
+   ```
+
+## 💻 Servidor de Desarrollo
+
+Para iniciar el servidor de desarrollo en tu máquina, ejecuta:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Luego, abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la aplicación. La página principal se encuentra y se puede editar en `src/app/page.tsx`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧪 Testing Automatizado
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Este proyecto utiliza Playwright para asegurar que los flujos principales de la aplicación funcionen correctamente simulando el uso de un usuario real. 
 
-## Learn More
+Para ejecutar los tests en segundo plano (headless):
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npx playwright test
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Para ver el reporte HTML detallado generado tras los tests:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npx playwright show-report
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 👥 Equipo / Autores
+- **[Tu Nombre / Nombres de los integrantes]**
+- *Materia / Proyecto Universitario*
