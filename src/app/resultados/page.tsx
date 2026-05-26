@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
+
 import { Bar, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -32,6 +34,19 @@ export default function Resultados() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const { data: responses, error } = await supabase
+        .from('survey_responses')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching data:', error);
+      } else {
+        setData(responses as SurveyResponse[]);
+      }
+      setLoading(false);
+    };
+
     fetchData();
 
     // Suscribirse a cambios en tiempo real (opcional)
@@ -47,18 +62,7 @@ export default function Resultados() {
     };
   }, []);
 
-  const fetchData = async () => {
-    const { data: responses, error } = await supabase
-      .from('survey_responses')
-      .select('*');
-    
-    if (error) {
-      console.error('Error fetching data:', error);
-    } else {
-      setData(responses as SurveyResponse[]);
-    }
-    setLoading(false);
-  };
+  // fetchData se declara dentro del efecto para evitar acceder a la función antes de su definición.
 
   if (loading) {
     return (
@@ -74,7 +78,7 @@ export default function Resultados() {
         <div className="text-6xl mb-4">📭</div>
         <h2 className="text-2xl font-bold text-slate-800">Aún no hay respuestas</h2>
         <p className="text-slate-500 mt-2">Comparte el código QR para empezar a recibir datos.</p>
-        <a href="/" className="mt-8 text-emerald-600 font-medium hover:underline">Volver al inicio</a>
+        <Link href="/" className="mt-8 text-emerald-600 font-medium hover:underline">Volver al inicio</Link>
       </div>
     );
   }
@@ -201,9 +205,9 @@ export default function Resultados() {
         </div>
 
         <div className="mt-12 text-center">
-          <a href="/" className="inline-flex items-center text-slate-500 hover:text-slate-800 transition-colors">
+          <Link href="/" className="inline-flex items-center text-slate-500 hover:text-slate-800 transition-colors">
             <span className="mr-2">←</span> Volver al panel de control
-          </a>
+          </Link>
         </div>
       </div>
     </div>

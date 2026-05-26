@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import QRCode from 'react-qr-code';
+
 
 export default function Home() {
   const [baseUrl, setBaseUrl] = useState('');
@@ -8,9 +10,11 @@ export default function Home() {
   useEffect(() => {
     // Obtenemos la URL actual para que los QR funcionen dinámicamente
     // ya sea en localhost o cuando esté desplegado.
-    if (typeof window !== 'undefined') {
-      setBaseUrl(window.location.origin);
-    }
+    queueMicrotask(() => {
+      if (typeof window !== 'undefined' && window.location?.origin) {
+        setBaseUrl(window.location.origin);
+      }
+    });
   }, []);
 
   if (!baseUrl) {
@@ -45,12 +49,12 @@ export default function Home() {
             <p className="text-slate-600 mb-8 text-center text-lg leading-relaxed">
               Comparte este código con los consumidores para que evalúen el producto desde sus dispositivos.
             </p>
-            <a 
+            <Link 
               href="/encuesta" 
               className="mt-auto w-full inline-flex justify-center items-center px-6 py-4 border border-transparent text-lg font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
             >
               Simular Encuesta
-            </a>
+            </Link>
           </div>
 
           {/* QR Resultados */}
@@ -64,12 +68,12 @@ export default function Home() {
             <p className="text-slate-600 mb-8 text-center text-lg leading-relaxed">
               Escanea para ver las analíticas y gráficos en tiempo real con todas las respuestas recopiladas.
             </p>
-            <a 
+            <Link 
               href="/resultados" 
               className="mt-auto w-full inline-flex justify-center items-center px-6 py-4 border border-transparent text-lg font-bold rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200"
             >
               Ver Dashboard
-            </a>
+            </Link>
           </div>
         </div>
       </div>

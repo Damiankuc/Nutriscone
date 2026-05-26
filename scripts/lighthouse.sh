@@ -14,6 +14,9 @@ lighthouse \
   --output=html \
   --output-path=./lighthouse-report
 
+# Nota: este comando asume que jq está instalado.
+# Si no lo está, el resumen final puede fallar pero el HTML/JSON igual se generará.
+
 echo ""
 echo "✅ Lighthouse audit completado!"
 echo "📄 Reporte disponible en: lighthouse-report.html"

@@ -26,7 +26,7 @@ export default function Encuesta() {
   });
 
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleChange = (field: string, value: number | boolean | string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -59,10 +59,11 @@ export default function Encuesta() {
 
       if (error) throw error;
       setStatus('success');
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       setStatus('error');
-      setErrorMessage(err.message || 'Ocurrió un error al enviar la encuesta.');
+      const message = err instanceof Error ? err.message : 'Ocurrió un error al enviar la encuesta.';
+      setErrorMessage(message);
     }
   };
 

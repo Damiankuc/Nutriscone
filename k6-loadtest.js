@@ -17,7 +17,7 @@ export const options = {
   },
 };
 
-export default function () {
+export default function run() {
   // Test 1: Cargar página principal
   const mainPageRes = http.get('http://localhost:3000');
   check(mainPageRes, {
@@ -73,3 +73,4 @@ export default function () {
 
   sleep(2);
 }
+
