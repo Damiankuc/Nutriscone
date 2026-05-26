@@ -1,0 +1,210 @@
+================================================================================
+                    DOCUMENTACION - BASE DE DATOS SUPABASE
+                         Proyecto: Scones-Scoring
+                            Fecha: Mayo 26, 2026
+================================================================================
+
+1. VERIFICACION REALIZADA
+================================================================================
+✅ Tabla "survey_responses" existe y es accesible
+✅ Credenciales configuradas correctamente
+✅ Row Level Security (RLS) activado
+✅ Políticas de seguridad implementadas
+✅ Registros actuales: 0 (lista para recibir respuestas)
+✅ Base de datos funcional y lista para usar
+
+
+2. INFORMACION DE CONEXION
+================================================================================
+Proyecto Supabase:    lvkyswpprxoqymhicepq
+URL Base:             https://lvkyswpprxoqymhicepq.supabase.co
+Variable Entorno:     NEXT_PUBLIC_SUPABASE_URL
+Clave Publica:        NEXT_PUBLIC_SUPABASE_ANON_KEY
+Cliente Usado:        @supabase/supabase-js v2.105.4
+
+
+3. ESTRUCTURA DE LA TABLA: survey_responses
+================================================================================
+
+Tabla: public.survey_responses
+
+Columnas:
+--------
+• id                  → UUID (clave primaria, auto-generado)
+• color              → INTEGER (1-5, evaluación del color)
+• aroma              → INTEGER (1-5, evaluación del aroma)
+• sabor              → INTEGER (1-5, evaluación del sabor)
+• textura            → INTEGER (1-5, evaluación de textura)
+• nivel_salado       → INTEGER (1-5, evaluación del nivel de sal)
+• sabor_garbanzo     → INTEGER (1-5, evaluación del sabor a garbanzo)
+• aceptacion_global  → INTEGER (1-5, evaluación general del producto)
+• consumiria_nuevamente → BOOLEAN (¿consumiría el producto nuevamente?)
+• created_at         → TIMESTAMP (timestamp automático UTC)
+
+Restricciones:
+- Todas las evaluaciones (1-5) tienen validación CHECK
+- Timestamp automático con zona UTC
+- ID es generado automáticamente con gen_random_uuid()
+
+
+4. POLITICAS DE SEGURIDAD (Row Level Security - RLS)
+================================================================================
+
+Estado RLS:          HABILITADO
+Propósito:           Permitir acceso público (anónimo) controlado
+
+Política 1: "Permitir inserts anónimos"
+- Tipo:              INSERT
+- Usuarios:          Cualquier usuario anónimo
+- Condición:         Siempre verdadero (permiso universal)
+- Uso:               Permite que usuarios anónimos envíen respuestas de encuesta
+
+Política 2: "Permitir select público"
+- Tipo:              SELECT
+- Usuarios:          Cualquier usuario anónimo
+- Condición:         Siempre verdadero (permiso universal)
+- Uso:               Permite que usuarios anónimos lean resultados en el dashboard
+
+
+5. CAMBIOS REALIZADOS EN ESTA SESION
+================================================================================
+
+Cambio 1: Correccion de URL en .env.local
+- Archivo:           .env.local
+- Antes:             NEXT_PUBLIC_SUPABASE_URL=https://lvkyswpprxoqymhicepq.supabase.co/rest/v1/
+- Despues:           NEXT_PUBLIC_SUPABASE_URL=https://lvkyswpprxoqymhicepq.supabase.co
+- Razon:             La URL incluía "/rest/v1/" innecesariamente, causando error de validación
+- Impacto:           Permite conexión correcta con Supabase
+
+
+6. FUNCIONALIDADES IMPLEMENTADAS
+================================================================================
+
+Modulo: Encuesta (src/app/encuesta/page.tsx)
+- Formulario de 7 preguntas + 1 pregunta de aceptación
+- Validación de respuestas completas
+- Inserción de datos en tabla survey_responses
+- Mensaje de éxito después de envío
+- Manejo de errores
+
+Modulo: Resultados/Dashboard (src/app/resultados/page.tsx)
+- Lectura de datos en tiempo real desde Supabase
+- Suscripción a cambios (nuevas respuestas)
+- Cálculo de promedios de cada criterio
+- Visualización con gráficos (Chart.js)
+- Estadísticas de aceptación global
+
+
+7. FLUJO DE DATOS
+================================================================================
+
+Usuario anónimo escanea QR
+    ↓
+Accede a /encuesta
+    ↓
+Completa las 7 preguntas de evaluación
+    ↓
+Responde pregunta de aceptación
+    ↓
+Envía formulario
+    ↓
+Se inserta en tabla survey_responses
+    ↓
+Dashboard (/resultados) se actualiza automáticamente
+    ↓
+Muestra gráficos y estadísticas en tiempo real
+
+
+8. PREGUNTAS DE LA ENCUESTA
+================================================================================
+
+1. Color del producto (escala 1-5: Muy desagradable → Muy agradable)
+2. Aroma (escala 1-5: Muy débil → Muy intenso)
+3. Sabor (escala 1-5: Muy desagradable → Muy agradable)
+4. Textura (escala 1-5: Muy seca/dura → Muy suave y húmeda)
+5. Nivel de salado (escala 1-5: Muy bajo → Muy alto)
+6. Sabor a garbanzo (escala 1-5: Muy débil → Muy intenso)
+7. Aceptación global (escala 1-5: Me disgusta mucho → Me gusta mucho)
+8. ¿Consumiría nuevamente? (Boolean: Sí/No)
+
+
+9. ESTADISTICAS GENERADAS EN DASHBOARD
+================================================================================
+
+- Promedio de cada criterio de evaluación
+- Total de respuestas recibidas
+- Porcentaje de usuarios que consumirían nuevamente
+- Gráficos de barras para cada criterio
+- Gráfico de pastel para aceptación general
+
+
+10. INSTRUCCIONES PARA USAR LA BASE DE DATOS
+================================================================================
+
+Verificar conexión:
+- Ejecuta: npx tsx verify-supabase.ts
+- Resultado esperado: "✅ Tabla survey_responses existe y es accesible"
+
+Ejecutar aplicación:
+- npm run dev
+- Accede a http://localhost:3000
+- Escanea QR de encuesta o ve a /encuesta
+- Completa el formulario
+- Los datos se guardan en Supabase automáticamente
+
+Ver datos en Supabase Dashboard:
+- Ve a https://app.supabase.com
+- Selecciona el proyecto "lvkyswpprxoqymhicepq"
+- Ve a SQL Editor
+- Ejecuta: SELECT * FROM public.survey_responses;
+
+
+11. DEPENDENCIAS RELACIONADAS CON SUPABASE
+================================================================================
+
+@supabase/supabase-js    ^2.105.4    - Cliente oficial de Supabase para JavaScript
+next                     16.2.6      - Framework React/Next.js
+react                    19.2.4      - Librería de UI
+chart.js                 ^4.5.1      - Librería para gráficos
+react-chartjs-2          ^5.3.1      - Wrapper de Chart.js para React
+
+
+12. SEGURIDAD Y CONSIDERACIONES
+================================================================================
+
+✅ RLS Habilitado: Protege la tabla con políticas de seguridad
+✅ Clave Anónima: Se usa clave pública (no expone credenciales confidenciales)
+✅ HTTPS: URL usa protocolo seguro
+✅ Validación: Valores numéricos validados en SQL (CHECK constraints)
+✅ Timestamps: Se almacena la hora de cada respuesta automáticamente
+
+Nota: Las políticas RLS permiten acceso público anónimo porque es una encuesta abierta.
+Si requieres más restricciones, contacta con el administrador de Supabase.
+
+
+13. PROXIMOS PASOS RECOMENDADOS
+================================================================================
+
+□ Hacer backup de datos antes de cambios importantes
+□ Monitorear crecimiento de datos en tabla survey_responses
+□ Implementar autenticación de usuario si es necesario
+□ Configurar alertas para respuestas anómalas
+□ Documentar cambios adicionales a la estructura de datos
+□ Realizar pruebas de carga con datos de prueba
+
+
+14. SOPORTE Y CONTACTO
+================================================================================
+
+Documentación de Supabase:     https://supabase.com/docs
+Consola Supabase:             https://app.supabase.com
+Cliente JS:                   https://github.com/supabase/supabase-js
+Proyecto ID:                  lvkyswpprxoqymhicepq
+
+
+================================================================================
+                          FIN DE LA DOCUMENTACION
+================================================================================
+Ultima actualizacion: Mayo 26, 2026
+Estado: ✅ FUNCIONAL Y VERIFICADO
+================================================================================
