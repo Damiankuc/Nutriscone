@@ -1,0 +1,402 @@
+================================================================================
+                   ANALISIS DE VIABILIDAD DE REQUERIMIENTOS
+                         Proyecto: Scones-Scoring
+                      Evaluación: Mayo 26, 2026
+================================================================================
+
+STACK TECNOLOGICO ACTUAL
+================================================================================
+
+Frontend:
+  • Next.js 16.2.6 - Framework React/SSR
+  • React 19.2.4 - Librería UI
+  • TypeScript 5 - Tipado estático
+  • Tailwind CSS 4 - Estilos
+  • Chart.js 4.5.1 - Gráficos
+  • react-qr-code 2.0.21 - Generación de QR
+  • Playwright 1.60.0 - Testing E2E
+
+Backend:
+  • Supabase - Base de datos PostgreSQL + Auth + Realtime
+  • Serverless (Next.js API Routes)
+
+Hosting Potencial:
+  • Vercel (optativo)
+  • Docker (no configurado)
+  • Any Node.js compatible server
+
+
+================================================================================
+VIABILIDAD POR REQUERIMIENTO
+================================================================================
+
+1️⃣ RF05: AGREGAR NUEVAS PREGUNTAS DINAMICAMENTE
+═══════════════════════════════════════════════════════════════════════════════
+
+ESTADO: ❌ NO IMPLEMENTADO → ✅ ALTAMENTE VIABLE
+
+ARQUITECTURA NECESARIA:
+┌─────────────────────────────────────────────────────────────────────┐
+│ BD Supabase - Nueva Tabla: "questions"                              │
+├──────────────────────────────────────────────────────────────────────┤
+│ • id (UUID) - clave primaria                                        │
+│ • survey_id (UUID) - referencia a encuesta                         │
+│ • question_text (TEXT) - texto de la pregunta                      │
+│ • question_type (ENUM) - "rating_5" / "boolean" / "text"          │
+│ • order (INT) - orden de aparición                                 │
+│ • active (BOOLEAN) - si está habilitada                            │
+│ • created_at (TIMESTAMP)                                            │
+│ • updated_at (TIMESTAMP)                                            │
+└──────────────────────────────────────────────────────────────────────┘
+
+CAMBIOS REQUERIDOS:
+
+Supabase SQL:
+  ✅ Crear tabla questions (10 min)
+  ✅ Crear tabla survey_question_responses (10 min)
+  ✅ Migrar datos existentes (5 min)
+
+Frontend:
+  ✅ Crear API Route: /api/questions (GET) (15 min)
+  ✅ Modificar encuesta para leer preguntas dinámicamente (30 min)
+  ✅ Actualizar tipos TypeScript (10 min)
+
+Admin Panel:
+  ❌ Crear interfaz de administración (2-3 horas)
+
+ESFUERZO TOTAL:        3-4 horas
+COMPLEJIDAD:           MEDIA
+RIESGO:                BAJO
+DEPENDENCIAS:          Requiere RF10 (encuestas múltiples) para máxima flexibilidad
+
+VIABILIDAD:            ✅ ALTAMENTE VIABLE (implementable en 1 sprint)
+
+
+─────────────────────────────────────────────────────────────────────────────
+
+
+2️⃣ RF08: PERMITIR COMENTARIOS OPCIONALES
+═══════════════════════════════════════════════════════════════════════════════
+
+ESTADO: ❌ NO IMPLEMENTADO → ✅ MUY FACIL
+
+CAMBIOS REQUERIDOS:
+
+Supabase SQL:
+  ALTER TABLE survey_responses 
+  ADD COLUMN comentarios TEXT;
+  Tiempo: 2 min
+
+Frontend:
+  ✅ Agregar campo textarea en formulario (15 min)
+  ✅ Actualizar validación de formulario (5 min)
+  ✅ Incluir en inserción (2 min)
+
+ESFUERZO TOTAL:        25 minutos
+COMPLEJIDAD:           BAJA
+RIESGO:                NULO
+DEPENDENCIAS:          Ninguna
+
+VIABILIDAD:            ✅ TRIVIAL (implementable en 30 minutos)
+
+
+─────────────────────────────────────────────────────────────────────────────
+
+
+3️⃣ RF09: ACTIVAR O DESACTIVAR PREGUNTAS
+═══════════════════════════════════════════════════════════════════════════════
+
+ESTADO: ❌ NO IMPLEMENTADO → ✅ VIABLE
+
+ARQUITECTURA NECESARIA:
+  Depende de RF05 (tabla de preguntas dinámicas)
+
+CAMBIOS REQUERIDOS:
+
+Supabase:
+  ✅ Ya incluida en RF05 (columna 'active' en tabla questions)
+
+Frontend:
+  ✅ Filtrar preguntas WHERE active = true (5 min)
+  ✅ Lógica condicional en renderizado (10 min)
+
+Admin Panel:
+  ✅ Toggle on/off para cada pregunta (20 min)
+
+ESFUERZO TOTAL:        2-3 horas (si RF05 ya está hecho)
+COMPLEJIDAD:           MEDIA
+RIESGO:                BAJO
+DEPENDENCIAS:          RF05 (Preguntas dinámicas)
+
+VIABILIDAD:            ✅ VIABLE (implementable después de RF05)
+
+
+─────────────────────────────────────────────────────────────────────────────
+
+
+4️⃣ RF10: GENERAR ENLACES UNICOS PARA CADA ENCUESTA
+═══════════════════════════════════════════════════════════════════════════════
+
+ESTADO: ❌ NO IMPLEMENTADO → ✅ VIABLE (CON REFACTORIZACION)
+
+ARQUITECTURA NECESARIA:
+┌─────────────────────────────────────────────────────────────────────┐
+│ BD Supabase - Nueva Tabla: "surveys"                                │
+├──────────────────────────────────────────────────────────────────────┤
+│ • id (UUID) - clave primaria                                        │
+│ • survey_code (VARCHAR unique) - código corto (ej: "ABC123")       │
+│ • title (TEXT) - nombre de la encuesta                             │
+│ • description (TEXT) - descripción                                 │
+│ • status (ENUM) - "draft" / "active" / "closed"                   │
+│ • created_at (TIMESTAMP)                                            │
+│ • expires_at (TIMESTAMP nullable)                                   │
+└──────────────────────────────────────────────────────────────────────┘
+
+CAMBIOS REQUERIDOS:
+
+Supabase SQL:
+  ✅ Crear tabla surveys (15 min)
+  ✅ Modificar survey_responses para referenciar survey_id (15 min)
+  ✅ Crear índices para performance (10 min)
+
+Frontend - Rutas dinámicas:
+  ✅ Cambiar /encuesta → /encuesta/[codigo] (30 min)
+  ✅ Cambiar /resultados → /resultados/[codigo] (30 min)
+  ✅ Crear /encuestas para listar todas (20 min)
+  ✅ Generar QR con new URL structure (10 min)
+
+Backend:
+  ✅ Crear API para generar códigos únicos (20 min)
+  ✅ Validar disponibilidad de código (15 min)
+
+Admin:
+  ✅ Interfaz para crear nuevas encuestas (1-2 horas)
+  ✅ Generar QR dinámico por encuesta (15 min)
+
+Testing:
+  ✅ Tests E2E para múltiples encuestas (30 min)
+
+ESFUERZO TOTAL:        6-8 horas
+COMPLEJIDAD:           ALTA
+RIESGO:                MEDIO (afecta mucho código existente)
+DEPENDENCIAS:          Ninguna técnica, pero recomendable después de RF05
+
+VIABILIDAD:            ✅ VIABLE (implementable en 2 sprints)
+IMPACTO:               ⚠️ ALTO (refactorización significativa)
+
+
+─────────────────────────────────────────────────────────────────────────────
+
+
+5️⃣ RNF02: TIEMPO DE CARGA < 3 SEGUNDOS
+═══════════════════════════════════════════════════════════════════════════════
+
+ESTADO: ⚠️ PROBABLE → ✅ VERIFICABLE
+
+ANÁLISIS:
+
+Factores favorables:
+  ✅ Next.js 16 - Optimizaciones automáticas
+  ✅ Supabase REST API - Muy rápido
+  ✅ CDN incluido (si usa Vercel)
+  ✅ Assets estáticos optimizados
+  ✅ Sin bibliotecas pesadas innecesarias
+
+Factores a verificar:
+  ⚠️ Latencia de red hacia Supabase
+  ⚠️ Performance en conexiones móviles 3G
+  ⚠️ Tiempo de primera renderización
+
+VERIFICACION RECOMENDADA:
+
+1. Ejecutar Lighthouse:
+   • Google PageSpeed Insights
+   • Lighthouse CLI
+   • WebPageTest
+
+2. Simular network throttling (3G, 4G)
+
+3. Monitorear Core Web Vitals
+
+ESFUERZO:              1-2 horas (auditoría)
+COMPLEJIDAD:           BAJA
+RIESGO:                NULO
+
+VIABILIDAD:            ✅ CUMPLIBLE
+ACCIONES:
+  □ Ejecutar Lighthouse audit
+  □ Si < 3s: ✅ Requerimiento cumplido
+  □ Si > 3s: Optimizar assets, images, bundles
+
+
+─────────────────────────────────────────────────────────────────────────────
+
+
+6️⃣ RNF03: SOPORTAR 50+ USUARIOS SIMULTANEOS
+═══════════════════════════════════════════════════════════════════════════════
+
+ESTADO: ✅ PROBABLE → VERIFICABLE
+
+ANÁLISIS:
+
+Capacidad por componente:
+  ✅ Supabase - Soporta miles de conexiones
+  ✅ Vercel - Auto-scaling serverless
+  ✅ Next.js API Routes - Sin límite teórico
+  ✅ Chart.js - Sin problemas con 50 usuarios
+
+Cuellos de botella potenciales:
+  ⚠️ Latencia de BD (sin índices óptimos)
+  ⚠️ Conexiones simultáneas a Realtime
+  ⚠️ Conexión de red del servidor
+
+LOAD TEST RECOMENDADO:
+
+Herramientas:
+  • k6 (recomendado para APIs)
+  • Apache JMeter
+  • Locust
+
+Escenarios:
+  1. 50 usuarios completando encuesta simultáneamente
+  2. 50 usuarios leyendo dashboard
+  3. Mezcla de inserciones y lecturas
+
+Métricas:
+  • Response time < 500ms
+  • Error rate < 1%
+  • Throughput > 100 req/s
+
+ESFUERZO:              2-3 horas
+COMPLEJIDAD:           BAJA
+RIESGO:                NULO
+
+VIABILIDAD:            ✅ CUMPLIBLE (casi seguro)
+ACCIONES:
+  □ Crear script k6 de load test
+  □ Ejecutar contra producción
+  □ Analizar resultados
+
+
+─────────────────────────────────────────────────────────────────────────────
+
+
+7️⃣ RNF10: DESPLIEGUE MEDIANTE CONTENEDORES DOCKER
+═══════════════════════════════════════════════════════════════════════════════
+
+ESTADO: ❌ NO IMPLEMENTADO → ✅ FACIL
+
+ARQUITECTURA NECESARIA:
+
+Dockerfile:
+  • Imagen base: node:20-alpine (34MB)
+  • Build stage: Compilar Next.js
+  • Production stage: Ejecutar servidor
+  • Tamaño final esperado: ~150-200MB
+
+Archivos a crear:
+  ✅ Dockerfile (30 líneas)
+  ✅ .dockerignore (estándar)
+  ✅ docker-compose.yml (opcional, para dev)
+
+CAMBIOS REQUERIDOS:
+
+Dockerfile:
+  FROM node:20-alpine
+  WORKDIR /app
+  COPY package*.json ./
+  RUN npm ci --only=production
+  COPY . .
+  RUN npm run build
+  EXPOSE 3000
+  CMD ["npm", "start"]
+
+Environment:
+  • Agregar manejo de variables de entorno
+
+ESFUERZO TOTAL:        1-2 horas
+COMPLEJIDAD:           BAJA
+RIESGO:                NULO
+DEPENDENCIAS:          Ninguna
+
+VIABILIDAD:            ✅ TRIVIAL (muy fácil)
+INCLUYE:
+  □ Dockerfile optimizado
+  □ docker-compose.yml para desarrollo
+  □ Instrucciones en README.md
+  □ GitHub Actions para CI/CD
+
+
+═══════════════════════════════════════════════════════════════════════════════
+RESUMEN EJECUTIVO DE VIABILIDAD
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────┬───────────┬──────────┬──────────────┬──────────────┐
+│ Requerimiento       │ Viabilidad│ Esfuerzo │ Complejidad  │ Prioridad    │
+├─────────────────────┼───────────┼──────────┼──────────────┼──────────────┤
+│ RF05 Preguntas Din. │ ✅ ALTA   │ 3-4h     │ MEDIA        │ ALTA         │
+│ RF08 Comentarios    │ ✅ MUY    │ 30 min   │ BAJA         │ BAJA         │
+│ RF09 Activar/Desac. │ ✅ ALTA   │ 2-3h*    │ MEDIA        │ MEDIA        │
+│ RF10 Enlaces Unicos │ ✅ ALTA   │ 6-8h     │ ALTA         │ CRITICA      │
+│ RNF02 Carga < 3s    │ ✅ PROB.  │ 1-2h**   │ BAJA         │ MEDIA        │
+│ RNF03 50+ Usuarios  │ ✅ PROB.  │ 2-3h**   │ BAJA         │ MEDIA        │
+│ RNF10 Docker        │ ✅ MUY    │ 1-2h     │ BAJA         │ MEDIA        │
+└─────────────────────┴───────────┴──────────┴──────────────┴──────────────┘
+
+* Depende de RF05 implementado
+** Verificación/auditoría, no implementación
+
+
+TIEMPO TOTAL DE IMPLEMENTACION:
+  • Fase 1 (Rápidas): 2-3 horas
+  • Fase 2 (Medias): 5-6 horas
+  • Fase 3 (Complejas): 6-8 horas
+  
+  ⏱️ TOTAL: 13-17 horas de desarrollo (2-3 sprints)
+
+
+RECOMENDACION:
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 SPRINT 1 (RECOMENDADO):
+   1. RF08 (Comentarios) - 30 min
+   2. RNF10 (Docker) - 1-2 horas
+   3. RNF02 (Lighthouse audit) - 1-2 horas
+   4. RNF03 (Load test) - 2-3 horas
+   ✅ Tarea 1: Mejorar producción y validar performance
+
+🎯 SPRINT 2:
+   1. RF05 (Preguntas dinámicas) - 3-4 horas
+   2. RF09 (Activar/Desactivar) - 2-3 horas (requiere RF05)
+   ✅ Tarea 2: Flexibilidad y administración
+
+🎯 SPRINT 3:
+   1. RF10 (Enlaces únicos) - 6-8 horas
+   ✅ Tarea 3: Multi-encuesta
+
+
+CONCLUSIÓN:
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ TODOS LOS REQUERIMIENTOS SON REALIZABLES con la arquitectura actual.
+
+Factores clave de éxito:
+  ✅ Stack moderno y escalable (Next.js + Supabase)
+  ✅ Arquitectura limpia y modular
+  ✅ TypeScript para seguridad de tipos
+  ✅ Testing infrastructure (Playwright)
+
+Riesgos mínimos:
+  • Bajo acoplamiento
+  • Fácil de refactorizar
+  • Migraciones de datos simples
+
+El proyecto está listo para escalar. Se recomienda proceder con Sprint 1.
+
+
+================================================================================
+                        VIABILIDAD CONFIRMADA ✅
+================================================================================
+Evaluación completada: 26 de Mayo, 2026
+Próxima revisión: Después de Sprint 1
+================================================================================

@@ -13,7 +13,7 @@ const QUESTIONS = [
 ];
 
 export default function Encuesta() {
-  const [formData, setFormData] = useState<Record<string, number | null>>({
+  const [formData, setFormData] = useState<Record<string, number | null | boolean | string>>({
     color: null,
     aroma: null,
     sabor: null,
@@ -22,20 +22,22 @@ export default function Encuesta() {
     sabor_garbanzo: null,
     aceptacion_global: null,
     consumiria_nuevamente: null,
+    comentarios: '',
   });
 
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleChange = (field: string, value: number | boolean) => {
+  const handleChange = (field: string, value: number | boolean | string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validar que todas las preguntas fueron respondidas
-    const isComplete = Object.values(formData).every(val => val !== null);
+    // Validar que todas las preguntas fueron respondidas (comentarios es opcional)
+    const requiredFields = ['color', 'aroma', 'sabor', 'textura', 'nivel_salado', 'sabor_garbanzo', 'aceptacion_global', 'consumiria_nuevamente'];
+    const isComplete = requiredFields.every(field => formData[field] !== null);
     if (!isComplete) {
       setErrorMessage('Por favor, completa todas las preguntas antes de enviar.');
       return;
@@ -45,9 +47,15 @@ export default function Encuesta() {
     setErrorMessage('');
 
     try {
+      // Limitar comentarios a 500 caracteres
+      const dataToInsert = {
+        ...formData,
+        comentarios: (formData.comentarios as string).substring(0, 500) || null,
+      };
+
       const { error } = await supabase
         .from('survey_responses')
-        .insert([formData]);
+        .insert([dataToInsert]);
 
       if (error) throw error;
       setStatus('success');
@@ -144,6 +152,20 @@ export default function Encuesta() {
                 <span className={`text-lg font-bold ${formData.consumiria_nuevamente === false ? 'text-rose-700' : 'text-slate-700'}`}>No</span>
               </label>
             </div>
+          </div>
+
+          {/* Comentarios Opcionales */}
+          <div className="bg-white rounded-3xl shadow-md p-8 transition hover:shadow-lg">
+            <h3 className="text-xl font-semibold text-slate-800 mb-4">9. Comentarios (Opcional)</h3>
+            <p className="text-slate-600 text-sm mb-4">¿Hay algo adicional que quieras comentar sobre el producto?</p>
+            <textarea
+              value={formData.comentarios as string}
+              onChange={(e) => handleChange('comentarios', e.target.value)}
+              placeholder="Comparte tus opiniones, sugerencias o comentarios..."
+              rows={4}
+              className="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 text-slate-800 placeholder-slate-400 resize-none"
+            />
+            <p className="text-xs text-slate-500 mt-2">Máximo 500 caracteres</p>
           </div>
 
           {errorMessage && (

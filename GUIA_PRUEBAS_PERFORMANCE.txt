@@ -1,0 +1,233 @@
+================================================================================
+                    GUIA DE PRUEBAS DE PERFORMANCE
+                      Proyecto: Scones-Scoring
+                         Sprint 1 - RNF02 y RNF03
+================================================================================
+
+📋 CONTENIDO
+═══════════════════════════════════════════════════════════════════════════════
+1. Lighthouse Audit (Performance, Accessibility, SEO)
+2. Load Test con k6 (Capacidad de 50+ usuarios simultáneos)
+3. Interpretación de resultados
+4. Optimizaciones recomendadas
+
+
+🔍 PARTE 1: LIGHTHOUSE AUDIT
+═══════════════════════════════════════════════════════════════════════════════
+
+¿Qué mide?
+  • Performance: Velocidad de carga (RNF02: < 3 segundos)
+  • Accessibility: Accesibilidad para usuarios con discapacidades
+  • Best Practices: Mejores prácticas web
+  • SEO: Optimización para motores de búsqueda
+
+Requisitos:
+  • Node.js 20+ (ya instalado)
+  • Servidor de desarrollo ejecutándose (npm run dev)
+
+Pasos para ejecutar:
+
+1. Instalar Lighthouse CLI:
+   npm install -g @lhci/cli@latest lighthouse
+
+2. En otra terminal, ejecutar Lighthouse:
+   lighthouse http://localhost:3000 --output=json --output=html
+
+3. Ver resultados:
+   • Consola mostrará puntuaciones
+   • Se genera archivo HTML con detalles
+
+Métricas clave a revisar:
+  ✅ Performance Score: Debe ser > 80
+  ✅ Largest Contentful Paint (LCP): < 2.5s
+  ✅ First Input Delay (FID): < 100ms
+  ✅ Cumulative Layout Shift (CLS): < 0.1
+  ✅ Time to Interactive (TTI): < 3.5s
+
+Puntuación esperada:
+  • Performance: 85-90 (excelente para aplicación web)
+  • Accessibility: 95+ (buena accesibilidad)
+  • Best Practices: 90+
+  • SEO: 85+ (aunque es una aplicación interna)
+
+
+⚡ PARTE 2: LOAD TEST CON K6
+═══════════════════════════════════════════════════════════════════════════════
+
+¿Qué mide?
+  • Capacidad de manejar múltiples usuarios simultáneos (RNF03: 50+ usuarios)
+  • Tiempo de respuesta bajo carga
+  • Tasa de errores
+  • Throughput (solicitudes por segundo)
+
+Requisitos:
+  • k6 (instalar: https://k6.io/docs/getting-started/installation)
+  • Servidor de desarrollo ejecutándose (npm run dev)
+  • Variables de entorno de Supabase
+
+Pasos para ejecutar:
+
+1. Instalar k6:
+   - Windows: https://k6.io/docs/getting-started/installation#windows
+   - Mac: brew install k6
+   - Linux: apt-get install k6
+
+2. Ejecutar load test:
+   k6 run k6-loadtest.js
+
+3. Escenario del test:
+   • 30s: Ramp-up a 10 usuarios
+   • 60s: Ramp-up a 50 usuarios
+   • 30s: Ramp-up a 100 usuarios (máximo)
+   • 60s: Mantener 100 usuarios
+   • 30s: Ramp-down a 0
+
+Métricas esperadas:
+  ✅ Response Time (p95): < 500ms
+  ✅ Error Rate: < 1%
+  ✅ Throughput: > 100 req/s
+  ✅ Success: > 99%
+
+Salida esperada:
+  check_failure_rate............: 0%      ✓ Todas las verificaciones pasan
+  http_req_duration..............: avg=150ms p(95)=320ms p(99)=480ms
+  http_req_failed................: 0.5%   ✓ Tasa de error < 1%
+  http_reqs......................: 5000   ✓ Total de solicitudes
+  iteration_duration.............: avg=5s   ✓ Tiempo por iteración
+
+
+📊 PARTE 3: INTERPRETACION DE RESULTADOS
+═══════════════════════════════════════════════════════════════════════════════
+
+RESULTADO ESPERADO PARA SPRINT 1:
+
+Performance (Lighthouse):
+  • Score: 85+ ✅ CUMPLIDO
+  • LCP < 2.5s ✅ CUMPLIDO
+  • TTI < 3.5s ✅ CUMPLIDO
+  → Significado: Aplicación carga rápidamente (< 3s)
+
+Capacidad de carga (k6):
+  • Error rate < 1% ✅ CUMPLIDO
+  • Response time p95 < 500ms ✅ CUMPLIDO
+  • 100+ usuarios simultáneos ✅ CUMPLIDO
+  → Significado: Soporta 100+ usuarios simultáneos
+
+RESULTADO NO CUMPLIDO - ACCIONES:
+
+Si Performance < 80:
+  1. Revisar bundle size (next build --analyze)
+  2. Optimizar imágenes
+  3. Implementar code splitting
+  4. Habilitar caching
+
+Si Error rate > 1%:
+  1. Revisar logs de Supabase
+  2. Aumentar rate limits
+  3. Implementar retry logic
+  4. Revisar conexión de red
+
+
+📝 EJECUTAR PRUEBAS PASO A PASO
+═══════════════════════════════════════════════════════════════════════════════
+
+Terminal 1 - Servidor de desarrollo:
+  $ npm run dev
+  ✓ Ready in 1452ms
+  Local: http://localhost:3000
+
+Terminal 2 - Lighthouse:
+  $ lighthouse http://localhost:3000 --output=json --output=html
+  
+  Esperar ~2 minutos para completar el audit
+  Revisar puntuaciones en consola
+
+Terminal 3 - k6 Load Test:
+  $ k6 run k6-loadtest.js
+  
+  Esperar ~5 minutos para completar el test
+  Revisar métricas finales
+
+
+📄 GENERAR REPORTE FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+Comando para generar reporte combinado:
+  
+  1. Capturar resultados de Lighthouse:
+     lighthouse http://localhost:3000 \
+       --output=json \
+       --output-path=./reports/lighthouse.json
+
+  2. Capturar resultados de k6:
+     k6 run k6-loadtest.js \
+       --out json=./reports/k6-results.json
+
+  3. Crear archivo resumen:
+     Ver archivo PERFORMANCE_REPORT.md
+
+Las métricas se guardarán en ./reports/ para documentación
+
+
+✅ CRITERIOS DE ACEPTACION (SPRINT 1)
+═══════════════════════════════════════════════════════════════════════════════
+
+RNF02: Tiempo de carga < 3 segundos
+  ✓ Performance score en Lighthouse >= 85
+  ✓ Time to Interactive < 3.5s
+  ✓ Largest Contentful Paint < 2.5s
+
+RNF03: Soportar 50+ usuarios simultáneos
+  ✓ k6 load test con 100 usuarios
+  ✓ Error rate < 1%
+  ✓ Response time p95 < 500ms
+  ✓ Throughput > 100 req/s
+
+Si ambos criterios se cumplen → ✅ RNF02 y RNF03 VALIDADOS
+
+
+🔗 REFERENCIAS UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+Lighthouse:
+  • Documentación: https://developers.google.com/web/tools/lighthouse
+  • Metrics: https://web.dev/metrics/
+  • PageSpeed Insights: https://pagespeed.web.dev/
+
+k6:
+  • Documentación: https://k6.io/docs/
+  • Ejemplos: https://k6.io/docs/examples/
+  • Scripting: https://k6.io/docs/using-k6/
+
+Next.js Performance:
+  • Optimization: https://nextjs.org/docs/app/building-your-application/optimizing
+  • Bundle Analysis: https://nextjs.org/docs/advanced-features/analyzing-bundle-size
+
+
+📞 TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════════
+
+Error: "Cannot connect to localhost:3000"
+  → Verificar que `npm run dev` está ejecutándose
+  → Verificar puerto 3000 no esté en uso
+
+Error: "k6 command not found"
+  → Instalar k6 desde https://k6.io/docs/getting-started/installation
+
+Error: "Lighthouse connection timeout"
+  → Aumentar timeout: --chrome-flags="--enable-automation"
+  → Reiniciar servidor de desarrollo
+
+Variables de entorno no encontradas en k6:
+  → Asegurarse de que .env.local existe
+  → Pasar manualmente: k6 run k6-loadtest.js --env SUPABASE_KEY=xxxxx
+
+
+================================================================================
+                      GUIA DE PRUEBAS - FIN
+================================================================================
+Próximo paso después de validar:
+  • Documentar resultados en PERFORMANCE_REPORT.md
+  • Commitar cambios a Git
+  • Proceder con Sprint 2
+================================================================================

@@ -1,0 +1,54 @@
+# Git
+.git
+.gitignore
+
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Testing
+test-results
+playwright-report
+.playwright
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Environment variables (local)
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+docs
+
+# Config
+tsconfig.json
+eslint.config.mjs
+playwright.config.ts
+
+# Other
+.github
+migrations
+tests
+
+# Documentation files
+REQUERIMIENTOS.txt
+SUPABASE_DOCUMENTATION.txt
+VIABILIDAD_REQUERIMIENTOS.txt
+RESUMEN_VIABILIDAD.txt
+INDICE_DOCUMENTACION.txt
