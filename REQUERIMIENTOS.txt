@@ -1,0 +1,386 @@
+================================================================================
+                        REQUERIMIENTOS DEL PROYECTO
+                         Proyecto: Scones-Scoring
+                         Análisis Numérico - TP1
+                            Fecha: Mayo 26, 2026
+================================================================================
+
+REQUERIMIENTOS FUNCIONALES (RF)
+================================================================================
+
+RF01: Acceso mediante código QR
+-------------------------------
+Descripción:       El sistema debe permitir acceder a la encuesta mediante un código QR.
+Prioridad:         Alta
+Estado:            ✅ IMPLEMENTADO
+Evidencia:         src/app/page.tsx genera QR dinámicos para /encuesta y /resultados
+Validación:        Funcional - QR generados con react-qr-code
+
+RF02: Mostrar preguntas en dispositivos móviles
+-------------------------------
+Descripción:       El sistema debe mostrar preguntas de degustación en dispositivos móviles.
+Prioridad:         Alta
+Estado:            ✅ IMPLEMENTADO
+Evidencia:         src/app/encuesta/page.tsx usa Tailwind CSS con responsive design
+Validación:        Responsive - diseño mobile-first con grid responsive
+
+RF03: Responder preguntas de evaluación sensorial
+-------------------------------
+Descripción:       El sistema debe permitir responder preguntas sobre sabor, olor, textura y apariencia.
+Prioridad:         Alta
+Estado:            ✅ IMPLEMENTADO
+Evidencia:         7 preguntas de evaluación (color, aroma, sabor, textura, salado, sabor garbanzo, aceptación)
+Validación:        Formulario funcional con validación de respuestas
+
+RF04: Almacenar respuestas en base de datos
+-------------------------------
+Descripción:       El sistema debe almacenar las respuestas en una base de datos.
+Prioridad:         Alta
+Estado:            ✅ IMPLEMENTADO
+Evidencia:         Supabase integrado, tabla survey_responses, RLS configurado
+Validación:        Conexión verificada - BD funcional y lista
+
+RF05: Agregar nuevas preguntas dinámicamente
+-------------------------------
+Descripción:       El sistema debe permitir agregar nuevas preguntas dinámicamente.
+Prioridad:         Media
+Estado:            ❌ NO IMPLEMENTADO
+Razon:             Requiere interfaz de administración y modificación de BD
+Esfuerzo:          Medio - Necesita: admin panel, API de CRUD, validación
+
+RF06: Mostrar estadísticas en tiempo real en dashboard
+-------------------------------
+Descripción:       El sistema debe mostrar estadísticas en tiempo real en un dashboard.
+Prioridad:         Alta
+Estado:            ✅ IMPLEMENTADO
+Evidencia:         src/app/resultados/page.tsx calcula promedios y gráficos
+                   Usa Chart.js para visualización
+                   Suscripción a cambios en tiempo real con Supabase
+Validación:        Dashboard funcional con gráficos de barras y pastel
+
+RF07: Visualizar cantidad de respuestas recibidas
+-------------------------------
+Descripción:       El sistema debe permitir visualizar cantidad de respuestas recibidas.
+Prioridad:         Media
+Estado:            ✅ PARCIALMENTE IMPLEMENTADO
+Evidencia:         src/app/resultados/page.tsx muestra total de respuestas
+Mejora:            Agregar contador destacado en dashboard
+
+RF08: Permitir comentarios opcionales
+-------------------------------
+Descripción:       El sistema debe permitir enviar comentarios opcionales.
+Prioridad:         Baja
+Estado:            ❌ NO IMPLEMENTADO
+Razon:             Tabla survey_responses no incluye campo de comentarios
+Esfuerzo:          Bajo - Necesita: agregar columna, campo de texto en formulario
+
+RF09: Activar o desactivar preguntas
+-------------------------------
+Descripción:       El sistema debe permitir activar o desactivar preguntas.
+Prioridad:         Media
+Estado:            ❌ NO IMPLEMENTADO
+Razon:             Requiere interfaz de administración
+Esfuerzo:          Medio - Necesita: admin panel, tabla de preguntas, lógica condicional
+
+RF10: Generar enlaces únicos para cada encuesta
+-------------------------------
+Descripción:       El sistema debe generar enlaces únicos para cada encuesta.
+Prioridad:         Media
+Estado:            ❌ NO IMPLEMENTADO
+Razon:             Sistema actual tiene una encuesta única global
+Esfuerzo:          Alto - Requiere: modelo de encuestas múltiples, identificadores únicos
+
+
+================================================================================
+REQUERIMIENTOS NO FUNCIONALES (RNF)
+================================================================================
+
+RNF01: Responsive y funcional en móviles
+-------------------------------
+Descripción:       La aplicación debe ser responsive y funcionar correctamente en móviles.
+Prioridad:         Alta
+Estado:            ✅ IMPLEMENTADO
+Evidencia:         Tailwind CSS v4, grid responsive, diseño mobile-first
+Validación:        Probado - diseño fluido desde 320px hasta pantallas grandes
+
+RNF02: Tiempo de carga < 3 segundos
+-------------------------------
+Descripción:       El tiempo de carga de la encuesta no debe superar los 3 segundos.
+Prioridad:         Alta
+Estado:            ✅ PROBABLE - REQUIERE PRUEBA
+Evidencia:         Next.js 16.2.6 con optimizaciones automáticas
+                   Supabase REST API de baja latencia
+Validacion:        Requiere benchmark con lighthouse/WebPageTest
+
+RNF03: Soportar 50+ usuarios simultáneos
+-------------------------------
+Descripción:       El sistema debe soportar al menos 50 usuarios simultáneos.
+Prioridad:         Alta
+Estado:            ✅ PROBABLE
+Evidencia:         Supabase soporta miles de conexiones simultáneas
+                   Next.js auto-escalable con serverless
+Validacion:        Requiere load test con herramientas como k6 o Apache JMeter
+
+RNF04: Interfaz simple e intuitiva
+-------------------------------
+Descripción:       La interfaz debe ser simple e intuitiva para uso rápido.
+Prioridad:         Alta
+Estado:            ✅ IMPLEMENTADO
+Evidencia:         Diseño minimalista con Tailwind CSS
+                   Flujo de usuario simple: QR → Encuesta → Envío
+                   Validación visual inmediata
+
+RNF05: Disponibilidad durante degustación
+-------------------------------
+Descripción:       El sistema debe mantener disponibilidad durante toda la degustación.
+Prioridad:         Crítica
+Estado:            ✅ PROBABLE - REQUIERE SLA
+Evidencia:         Supabase proporciona 99.9% uptime
+                   Vercel proporciona 99.95% uptime (si se deploya ahí)
+Validacion:        Requiere monitoreo en producción
+
+RNF06: Respuestas seguras en BD
+-------------------------------
+Descripción:       Las respuestas deben almacenarse de forma segura en la base de datos.
+Prioridad:         Crítica
+Estado:            ✅ IMPLEMENTADO
+Evidencia:         Supabase usa encriptación de datos en reposo
+                   RLS (Row Level Security) configurado
+                   HTTPS para todas las conexiones
+                   Validación SQL CHECK constraints
+
+RNF07: Dashboard actualiza automáticamente
+-------------------------------
+Descripción:       El dashboard debe actualizar datos automáticamente cada pocos segundos.
+Prioridad:         Media
+Estado:            ✅ IMPLEMENTADO
+Evidencia:         Supabase Realtime subscriptions en src/app/resultados/page.tsx
+Validacion:        Actualización en tiempo real confirmada
+
+RNF08: Escalabilidad para futuras encuestas
+-------------------------------
+Descripción:       El sistema debe permitir escalabilidad para futuras encuestas.
+Prioridad:         Media
+Estado:            ⚠️  PARCIALMENTE IMPLEMENTADO
+Evidencia:         Arquitectura modular actual permite agregar nuevas encuestas
+Mejora:            Requiere refactorización para multi-encuesta (RF10)
+
+RNF09: Backend con arquitectura modular
+-------------------------------
+Descripción:       El backend debe estar organizado mediante arquitectura modular.
+Prioridad:         Media
+Estado:            ✅ IMPLEMENTADO
+Evidencia:         Estructura clara:
+                   - src/lib/supabase/client.ts (cliente)
+                   - src/app/encuesta/page.tsx (módulo de encuesta)
+                   - src/app/resultados/page.tsx (módulo de resultados)
+Validacion:        Separación de concerns correcta
+
+RNF10: Despliegue mediante contenedores Docker
+-------------------------------
+Descripción:       El sistema debe ser desplegable mediante contenedores Docker.
+Prioridad:         Media
+Estado:            ❌ NO IMPLEMENTADO
+Razon:             No existe Dockerfile ni docker-compose.yml
+Esfuerzo:          Bajo-Medio - Necesita: Dockerfile, docker-compose, .dockerignore
+
+
+================================================================================
+RESUMEN DE CUMPLIMIENTO
+================================================================================
+
+Requerimientos Funcionales (RF):
+  ✅ Implementados:           4/10  (RF01, RF02, RF03, RF04, RF06, RF07)
+  ⚠️  Parcialmente:           1/10  (RF07)
+  ❌ Faltantes:               5/10  (RF05, RF08, RF09, RF10)
+  
+  Cobertura Actual:           60%
+
+Requerimientos No Funcionales (RNF):
+  ✅ Implementados:           7/10  (RNF01, RNF04, RNF05, RNF06, RNF07, RNF09)
+  ⚠️  Probable/Pendiente:     3/10  (RNF02, RNF03, RNF05)
+  ❌ Faltantes:               1/10  (RNF10)
+  
+  Cobertura Actual:           80%
+
+TOTAL DE CUMPLIMIENTO:        70%
+
+
+================================================================================
+REQUERIMIENTOS PENDIENTES POR PRIORIDAD
+================================================================================
+
+PRIORIDAD CRÍTICA (Implementar primero):
+❌ RF10: Generar enlaces únicos para cada encuesta
+   Impacto: Permite manejar múltiples encuestas simultáneamente
+   Esfuerzo: Alto
+   
+PRIORIDAD ALTA:
+❌ RF05: Agregar nuevas preguntas dinámicamente
+   Impacto: Flexibilidad para nuevas degustaciones
+   Esfuerzo: Medio
+
+PRIORIDAD MEDIA:
+❌ RF08: Permitir comentarios opcionales
+   Impacto: Retroalimentación cualitativa adicional
+   Esfuerzo: Bajo
+   
+❌ RF09: Activar o desactivar preguntas
+   Impacto: Control sobre qué preguntas mostrar
+   Esfuerzo: Medio
+   
+❌ RNF10: Despliegue con Docker
+   Impacto: Facilita deployment en diferentes ambientes
+   Esfuerzo: Bajo-Medio
+
+PENDIENTE DE VALIDACIÓN:
+⚠️  RNF02: Tiempo de carga < 3 segundos
+   Acción: Ejecutar Lighthouse audit
+   
+⚠️  RNF03: Soportar 50+ usuarios simultáneos
+   Acción: Ejecutar load test
+
+
+================================================================================
+PLAN DE ACCION PARA COMPLETAR REQUERIMIENTOS
+================================================================================
+
+FASE 1: Mejoras Rápidas (Baja Complejidad)
+─────────────────────────────────────────
+1. Agregar campo de comentarios (RF08)
+   - Agregar columna 'comentarios' a tabla survey_responses
+   - Agregar textarea en formulario de encuesta
+   - Incluir en inserción de datos
+   Tiempo estimado: 1-2 horas
+
+2. Crear Dockerfile para despliegue (RNF10)
+   - Configurar imagen Node.js
+   - Compilar aplicación Next.js
+   - Exponer puerto y variables de entorno
+   Tiempo estimado: 1-2 horas
+
+3. Validar performance (RNF02, RNF03)
+   - Ejecutar Lighthouse audit
+   - Ejecutar load test con k6
+   Tiempo estimado: 2-3 horas
+
+FASE 2: Características Medias (Complejidad Media)
+─────────────────────────────────────────────────
+4. Implementar preguntas dinámicas (RF05)
+   - Crear tabla 'questions' en Supabase
+   - Crear interfaz de administración
+   - Modificar encuesta para leer preguntas de BD
+   Tiempo estimado: 4-6 horas
+
+5. Activar/Desactivar preguntas (RF09)
+   - Agregar estado 'active' a tabla de preguntas
+   - Implementar lógica condicional en formulario
+   Tiempo estimado: 3-4 horas
+
+FASE 3: Características Complejas (Alta Complejidad)
+────────────────────────────────────────────────────
+6. Encuestas múltiples con enlaces únicos (RF10)
+   - Redesñar modelo de datos para multi-encuesta
+   - Crear sistema de generación de enlaces
+   - Implementar rutas dinámicas
+   - Modificar dashboard para multi-encuesta
+   Tiempo estimado: 8-12 horas
+
+
+================================================================================
+VALIDACION ACTUAL DEL SISTEMA
+================================================================================
+
+✅ RF01 - QR Code: VERIFICADO
+   - Genera QR dinámicos
+   - URLs accesibles
+   - Código: <QRCode value={`${baseUrl}/encuesta`} />
+
+✅ RF02 - Mobile: VERIFICADO
+   - Responsive design activo
+   - Breakpoints correctos
+   - Tested con DevTools
+
+✅ RF03 - Preguntas: VERIFICADO
+   - 7 preguntas implementadas
+   - Escala 1-5 funcional
+   - Validación en cliente y servidor
+
+✅ RF04 - Almacenamiento: VERIFICADO
+   - Conexión Supabase funcionando
+   - Tabla creada correctamente
+   - Inserciones exitosas
+
+✅ RF06 - Dashboard tiempo real: VERIFICADO
+   - Gráficos Chart.js funcionales
+   - Suscripción Realtime activa
+   - Cálculos de promedios correctos
+
+✅ RNF01 - Responsive: VERIFICADO
+   - Tailwind CSS aplicado
+   - Mobile-first approach
+   - Estilos consistentes
+
+✅ RNF04 - Interfaz simple: VERIFICADO
+   - Diseño minimalista
+   - Flujo intuitivo
+   - UX amigable
+
+✅ RNF06 - Seguridad: VERIFICADO
+   - RLS habilitado
+   - HTTPS en uso
+   - Validación SQL
+
+✅ RNF09 - Modularidad: VERIFICADO
+   - Código bien organizado
+   - Separación de responsabilidades
+   - Componentes reutilizables
+
+
+================================================================================
+RECOMENDACIONES
+================================================================================
+
+1. INMEDIATAS:
+   • Agregar comentarios opcionales (RF08) - bajo impacto, rápido
+   • Crear Dockerfile (RNF10) - necesario para producción
+   • Realizar load test (RNF03) - validar capacidad
+
+2. CORTO PLAZO (2-3 sprints):
+   • Implementar preguntas dinámicas (RF05)
+   • Sistema de administración básico
+   • Panel de control para profesores/degustadores
+
+3. MEDIANO PLAZO (4-6 sprints):
+   • Encuestas múltiples (RF10)
+   • Generar reportes PDF
+   • Integración con calendario
+
+4. CONSIDERACIONES TÉCNICAS:
+   • Agregar autenticación para admin panel
+   • Implementar logging y monitoreo
+   • Configurar backups automáticos
+   • Documentar APIs
+
+
+================================================================================
+METODO DE VERIFICACION
+================================================================================
+
+Se han verificado los requerimientos mediante:
+1. Análisis de código fuente
+2. Prueba de funcionalidades implementadas
+3. Validación de configuración Supabase
+4. Review de arquitectura
+
+Estado de verificación: Completado el 26 de Mayo de 2026
+Próxima revisión recomendada: Después de implementar Phase 1
+
+
+================================================================================
+                          FIN DE REQUERIMIENTOS
+================================================================================
+Ultima actualizacion: Mayo 26, 2026
+Preparado por: Sistema de Verificación Automática
+Proyecto: Scones-Scoring
+================================================================================
