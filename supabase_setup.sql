@@ -11,6 +11,8 @@ create table public.survey_responses (
   sabor_garbanzo integer not null check (sabor_garbanzo >= 1 and sabor_garbanzo <= 5),
   aceptacion_global integer not null check (aceptacion_global >= 1 and aceptacion_global <= 5),
   consumiria_nuevamente boolean not null,
+  compraria_en_bar boolean,
+  cuanto_pagaria numeric,
   comentarios text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
