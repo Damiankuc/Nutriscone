@@ -28,6 +28,9 @@ type SurveyResponse = {
   sabor_garbanzo: number;
   aceptacion_global: number;
   consumiria_nuevamente: boolean;
+  compraria_en_bar: boolean;
+  cuanto_pagaria: number | null;
+  comentarios: string | null;
 };
 
 export default function Resultados() {
@@ -104,6 +107,38 @@ export default function Resultados() {
 
   const consumiriaSi = data.filter(r => r.consumiria_nuevamente).length;
   const consumiriaNo = total - consumiriaSi;
+
+  // --- Cálculos para Cuánto Pagaría ---
+  const cuantoPagariaValues = data
+    .map(r => r.cuanto_pagaria)
+    .filter((v): v is number => v !== null && v !== undefined && !isNaN(v));
+
+  const minPagaria = cuantoPagariaValues.length > 0 ? Math.min(...cuantoPagariaValues) : 0;
+  const maxPagaria = cuantoPagariaValues.length > 0 ? Math.max(...cuantoPagariaValues) : 0;
+
+  let averagePagaria = 0;
+  if (cuantoPagariaValues.length > 0) {
+    // Filtrar outliers usando Rango Intercuartílico (IQR) para no romper el promedio
+    const sorted = [...cuantoPagariaValues].sort((a, b) => a - b);
+    const q1 = sorted[Math.floor(sorted.length * 0.25)];
+    const q3 = sorted[Math.floor(sorted.length * 0.75)];
+    const iqr = q3 - q1;
+    
+    // Rango aceptado
+    const lowerBound = q1 - 1.5 * iqr;
+    const upperBound = q3 + 1.5 * iqr;
+    
+    const filteredValues = sorted.filter(v => v >= lowerBound && v <= upperBound);
+    const finalValues = filteredValues.length > 0 ? filteredValues : sorted;
+    
+    const sum = finalValues.reduce((acc, val) => acc + val, 0);
+    averagePagaria = sum / finalValues.length;
+  }
+
+  // --- Comentarios ---
+  const comentariosList = data
+    .map(r => r.comentarios)
+    .filter((c): c is string => typeof c === 'string' && c.trim().length > 0);
 
   // --- Configuraciones de Gráficos ---
   const barChartData = {
@@ -204,6 +239,44 @@ export default function Resultados() {
           </div>
 
         </div>
+
+        {/* Sección de Precio Dispuesto a Pagar */}
+        <div className="mt-8 bg-white rounded-3xl shadow-lg p-8">
+          <h2 className="text-2xl font-bold text-slate-800 mb-6">Análisis de Precio de Venta (Porción 3 scones)</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-slate-50 rounded-2xl p-6 text-center border border-slate-100 flex flex-col justify-center">
+              <span className="block text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Mínimo</span>
+              <span className="text-3xl font-black text-slate-700">${minPagaria.toLocaleString('es-AR')}</span>
+            </div>
+            <div className="bg-emerald-50 rounded-2xl p-6 text-center border border-emerald-100 shadow-sm transform scale-105 flex flex-col justify-center">
+              <span className="block text-sm font-semibold text-emerald-600 uppercase tracking-wider mb-2">Promedio Estimado*</span>
+              <span className="text-4xl font-black text-emerald-700">${Math.round(averagePagaria).toLocaleString('es-AR')}</span>
+              <p className="text-xs text-emerald-500 mt-2">*Filtrando valores atípicos (outliers) extremos</p>
+            </div>
+            <div className="bg-slate-50 rounded-2xl p-6 text-center border border-slate-100 flex flex-col justify-center">
+              <span className="block text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Máximo</span>
+              <span className="text-3xl font-black text-slate-700">${maxPagaria.toLocaleString('es-AR')}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Sección de Comentarios */}
+        {comentariosList.length > 0 && (
+          <div className="mt-8 bg-white rounded-3xl shadow-lg p-8 animate-fade-in-up">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+              <span className="mr-3">💬</span>
+              Comentarios de los Comensales
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {comentariosList.map((comentario, index) => (
+                <div key={index} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm relative">
+                  <div className="text-6xl text-indigo-100 absolute -top-2 left-2 font-serif opacity-50">"</div>
+                  <p className="text-slate-700 italic relative z-10 pt-4 leading-relaxed">{comentario}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-12 text-center">
           <Link href="/" className="inline-flex items-center text-slate-500 hover:text-slate-800 transition-colors">

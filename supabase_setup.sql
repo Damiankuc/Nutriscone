@@ -1,6 +1,12 @@
 -- SQL Script for Scones-Scoring
 -- Ejecuta este script en el SQL Editor de tu proyecto en Supabase
 
+-- Borramos la tabla si ya existe para empezar de 0 (CUIDADO: Esto borra los datos anteriores)
+drop table if exists public.survey_responses;
+
+-- Aseguramos tener la extensión para UUIDs (como tenías en tu Supabase)
+create extension if not exists pgcrypto;
+
 create table public.survey_responses (
   id uuid default gen_random_uuid() primary key,
   color integer not null check (color >= 1 and color <= 5),
@@ -11,19 +17,39 @@ create table public.survey_responses (
   sabor_garbanzo integer not null check (sabor_garbanzo >= 1 and sabor_garbanzo <= 5),
   aceptacion_global integer not null check (aceptacion_global >= 1 and aceptacion_global <= 5),
   consumiria_nuevamente boolean not null,
+  compraria_en_bar boolean,
+  cuanto_pagaria numeric,
   comentarios text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
+
+-- Aseguramos que la columna 'comentarios' exista (por si alguna vez corrés el script sin el DROP TABLE)
+do $$
+begin
+  if not exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'survey_responses'
+      and column_name = 'comentarios'
+  ) then
+    alter table public.survey_responses add column comentarios text;
+  end if;
+end $$;
 
 -- Habilitar Seguridad a Nivel de Fila (RLS)
 alter table public.survey_responses enable row level security;
 
 -- Permitir a cualquier usuario anónimo INSERTAR respuestas (para la encuesta)
-create policy "Permitir inserts anónimos" 
-  on public.survey_responses for insert 
-  with check (true);
+drop policy if exists "Permitir inserts anónimos" on public.survey_responses;
+create policy "Permitir inserts anónimos"
+on public.survey_responses
+for insert
+with check (true);
 
 -- Permitir a cualquier usuario anónimo LEER respuestas (para el Dashboard de resultados)
-create policy "Permitir select público" 
-  on public.survey_responses for select 
-  using (true);
+drop policy if exists "Permitir select público" on public.survey_responses;
+create policy "Permitir select público"
+on public.survey_responses
+for select
+using (true);

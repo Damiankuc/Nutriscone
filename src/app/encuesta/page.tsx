@@ -24,6 +24,8 @@ export default function Encuesta() {
     sabor_garbanzo: null,
     aceptacion_global: null,
     consumiria_nuevamente: null,
+    compraria_en_bar: null,
+    cuanto_pagaria: '',
     comentarios: '',
   });
 
@@ -39,10 +41,16 @@ export default function Encuesta() {
     e.preventDefault();
     
     // Validar que todas las preguntas fueron respondidas (comentarios es opcional)
-    const requiredFields = ['color', 'aroma', 'sabor', 'textura', 'nivel_salado', 'sabor_garbanzo', 'aceptacion_global', 'consumiria_nuevamente'];
+    const requiredFields = ['color', 'aroma', 'sabor', 'textura', 'nivel_salado', 'sabor_garbanzo', 'aceptacion_global', 'consumiria_nuevamente', 'compraria_en_bar'];
     const isComplete = requiredFields.every(field => formData[field] !== null);
+    
     if (!isComplete) {
       setErrorMessage('Por favor, completa todas las preguntas antes de enviar.');
+      return;
+    }
+
+    if (formData.compraria_en_bar === true && (formData.cuanto_pagaria === '' || formData.cuanto_pagaria === null)) {
+      setErrorMessage('Por favor, indica cuánto pagarías por la porción.');
       return;
     }
 
@@ -53,6 +61,7 @@ export default function Encuesta() {
       // Limitar comentarios a 500 caracteres
       const dataToInsert = {
         ...formData,
+        cuanto_pagaria: formData.compraria_en_bar && formData.cuanto_pagaria !== '' ? Number(formData.cuanto_pagaria) : null,
         comentarios: (formData.comentarios as string).substring(0, 500) || null,
       };
 
@@ -167,9 +176,69 @@ export default function Encuesta() {
             </div>
           </div>
 
+          {/* Pregunta 9 - Boolean */}
+          <div className="bg-white rounded-3xl shadow-md p-8 transition hover:shadow-lg">
+            <h3 className="text-xl font-semibold text-slate-800 mb-6">9. ¿Compraría este producto en el bar de la cuenca?</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <label 
+                className={`
+                  relative flex items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all
+                  ${formData.compraria_en_bar === true ? 'border-emerald-500 bg-emerald-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
+                `}
+              >
+                <input 
+                  type="radio" 
+                  name="compraria_en_bar" 
+                  className="sr-only"
+                  onChange={() => handleChange('compraria_en_bar', true)}
+                />
+                <span className={`text-lg font-bold ${formData.compraria_en_bar === true ? 'text-emerald-700' : 'text-slate-700'}`}>Sí</span>
+              </label>
+              
+              <label 
+                className={`
+                  relative flex items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all
+                  ${formData.compraria_en_bar === false ? 'border-rose-500 bg-rose-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
+                `}
+              >
+                <input 
+                  type="radio" 
+                  name="compraria_en_bar" 
+                  className="sr-only"
+                  onChange={() => handleChange('compraria_en_bar', false)}
+                />
+                <span className={`text-lg font-bold ${formData.compraria_en_bar === false ? 'text-rose-700' : 'text-slate-700'}`}>No</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Pregunta 10 - Condicional (Cuánto pagaría) */}
+          {formData.compraria_en_bar === true && (
+            <div className="bg-white rounded-3xl shadow-md p-8 transition hover:shadow-lg animate-fade-in-up">
+              <h3 className="text-xl font-semibold text-slate-800 mb-4">10. ¿Cuánto pagarías por una porción de 3 scones?</h3>
+              <p className="text-slate-600 text-sm mb-4">Ingresa el monto en pesos (solo números)</p>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500 font-bold">$</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={formData.cuanto_pagaria as string}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^[0-9]+$/.test(value)) {
+                      handleChange('cuanto_pagaria', value);
+                    }
+                  }}
+                  placeholder="0"
+                  className="w-full pl-8 pr-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 text-slate-800 font-bold placeholder-slate-400"
+                />
+              </div>
+            </div>
+          )}
+
           {/* Comentarios Opcionales */}
           <div className="bg-white rounded-3xl shadow-md p-8 transition hover:shadow-lg">
-            <h3 className="text-xl font-semibold text-slate-800 mb-4">9. Comentarios (Opcional)</h3>
+            <h3 className="text-xl font-semibold text-slate-800 mb-4">11. Comentarios (Opcional)</h3>
             <p className="text-slate-600 text-sm mb-4">¿Hay algo adicional que quieras comentar sobre el producto?</p>
             <textarea
               value={formData.comentarios as string}

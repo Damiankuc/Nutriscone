@@ -1,70 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🥐 Scones-Scoring (Nutriscone)
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js)
+![React](https://img.shields.io/badge/React-19.2-blue?style=flat-square&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)
+![Supabase](https://img.shields.io/badge/Supabase-Database-green?style=flat-square&logo=supabase)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat-square&logo=tailwindcss)
 
-First, run the development server:
+Scones-Scoring es una aplicación web full-stack desarrollada para la recolección de respuestas de encuestas a través de códigos QR y la visualización de estadísticas en tiempo real. 
 
+## ✨ Características Principales
+
+- **📱 Acceso Rápido:** Página principal que genera un código QR para un acceso instantáneo a la encuesta.
+- **📝 Formulario de Encuesta:** Interfaz dinámica y responsiva para la carga de datos.
+- **📊 Dashboard de Resultados:** Visualización de estadísticas en tiempo real utilizando `Chart.js`.
+- **☁️ Backend Serverless:** Integración nativa con **Supabase** para almacenamiento seguro y persistente con políticas de seguridad (RLS).
+- **🚀 Performance:** Optimizado con las últimas características de Next.js (App Router, Server Components).
+- **🐳 Docker Ready:** Configuración lista para despliegue en contenedores.
+- **🧪 Testing Integrado:** Pruebas End-to-End con **Playwright** y Load Testing con **k6**.
+
+## 🛠️ Stack Tecnológico
+
+- **Frontend:** Next.js 16.2, React 19, Tailwind CSS v4, Chart.js
+- **Backend/Database:** Supabase (PostgreSQL)
+- **Lenguaje:** TypeScript
+- **Testing:** Playwright (E2E), k6 (Performance)
+- **Infraestructura:** Docker, Docker Compose
+
+## 🚀 Inicio Rápido (Desarrollo Local)
+
+### 1. Clonar el repositorio y preparar entorno
+
+```bash
+git clone <url-del-repositorio>
+cd Scones-Scoring
+npm install
+```
+
+### 2. Configurar variables de entorno
+
+Crea un archivo `.env.local` en la raíz del proyecto y agrega tus credenciales de Supabase:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
+```
+
+### 3. Configurar Base de Datos (Supabase)
+
+Ejecuta el script SQL incluido en `supabase_setup.sql` desde el panel SQL de tu proyecto en Supabase para crear las tablas necesarias (`survey_responses`) y configurar RLS.
+
+### 4. Levantar el entorno de desarrollo
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La aplicación estará disponible en [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Generador QR:** `/`
+- **Encuesta:** `/encuesta`
+- **Resultados:** `/resultados`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🐳 Despliegue con Docker
 
-## Docker (RNF10)
+El proyecto está preparado para ser ejecutado en contenedores.
 
-### Requisitos
-- Tener configuradas las variables de entorno de Supabase.
-
-### Ejecutar
-1) Copiar variables:
-
+1. Asegúrate de tener el archivo `.env` configurado (puedes copiar el `.env.local`):
 ```bash
-copy .env.example .env
+cp .env.local .env
 ```
 
-2) Levantar la app:
-
+2. Levantar los servicios:
 ```bash
 docker compose up --build
 ```
 
-La aplicación queda disponible en: http://localhost:3000
+## 🧪 Pruebas y Performance
 
-## Performance (RNF02 / RNF03)
-
-### Lighthouse
+### Pruebas E2E (Playwright)
 ```bash
-./scripts/lighthouse.sh
+npx playwright test
 ```
 
-El reporte HTML queda en `lighthouse-report/`.
-
-### Load test con k6
-Asegurate de tener k6 instalado y ejecutar:
-
+### Pruebas de Carga (k6)
+Asegúrate de tener [k6](https://k6.io/) instalado.
 ```bash
 k6 run k6-loadtest.js
 ```
 
-Nota: el script asume un endpoint de Supabase. Si tu entorno requiere auth, ajusta el payload/headers.
+### Auditoría de Performance (Lighthouse)
+```bash
+./scripts/lighthouse.sh
+```
 
-## Learn More
+## 📚 Documentación Adicional
+
+En la raíz del proyecto encontrarás archivos de documentación detallados:
+- `INDICE_DOCUMENTACION.txt`: Guía principal de todos los documentos del proyecto.
+- `REQUERIMIENTOS.txt`: Listado y estado de los requerimientos funcionales y no funcionales.
+- `SUPABASE_DOCUMENTATION.txt`: Detalles de la estructura y configuración de la base de datos.
+- `VIABILIDAD_REQUERIMIENTOS.txt`: Análisis técnico de la implementación.
+
+## 🤝 Contribución
+Caminos, Roberto Damian - Database
+Meza, Santiago - Backend developter
+Sosa Wilka, Francisco - Tester
+Codermatz, Valentino - Frontend
 
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
