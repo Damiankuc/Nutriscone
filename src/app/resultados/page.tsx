@@ -29,6 +29,7 @@ type SurveyResponse = {
   consumiria_nuevamente: boolean;
   compraria_en_bar: boolean;
   cuanto_pagaria: number | null;
+  comentarios: string | null;
 };
 
 export default function Resultados() {
@@ -132,6 +133,11 @@ export default function Resultados() {
     const sum = finalValues.reduce((acc, val) => acc + val, 0);
     averagePagaria = sum / finalValues.length;
   }
+
+  // --- Comentarios ---
+  const comentariosList = data
+    .map(r => r.comentarios)
+    .filter((c): c is string => typeof c === 'string' && c.trim().length > 0);
 
   // --- Configuraciones de Gráficos ---
   const barChartData = {
@@ -252,6 +258,24 @@ export default function Resultados() {
             </div>
           </div>
         </div>
+
+        {/* Sección de Comentarios */}
+        {comentariosList.length > 0 && (
+          <div className="mt-8 bg-white rounded-3xl shadow-lg p-8 animate-fade-in-up">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+              <span className="mr-3">💬</span>
+              Comentarios de los Comensales
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {comentariosList.map((comentario, index) => (
+                <div key={index} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm relative">
+                  <div className="text-6xl text-indigo-100 absolute -top-2 left-2 font-serif opacity-50">"</div>
+                  <p className="text-slate-700 italic relative z-10 pt-4 leading-relaxed">{comentario}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-12 text-center">
           <Link href="/" className="inline-flex items-center text-slate-500 hover:text-slate-800 transition-colors">
