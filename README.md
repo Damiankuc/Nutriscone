@@ -102,5 +102,9 @@ En la raíz del proyecto encontrarás archivos de documentación detallados:
 - `VIABILIDAD_REQUERIMIENTOS.txt`: Análisis técnico de la implementación.
 
 ## 🤝 Contribución
+Caminos, Roberto Damian - Database
+Meza, Santiago - Backend developter
+Sosa Wilka, Francisco - Tester
+Codermatz, Valentino - Frontend
 
 
