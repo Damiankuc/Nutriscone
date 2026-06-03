@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="64" viewBox="0 0 240 64" fill="none">
+  <rect width="240" height="64" rx="12" fill="#FBF4E4" />
+  <g transform="translate(12,8)">
+    <circle cx="24" cy="24" r="20" fill="#7B5434" />
+    <path d="M12 20c4 0 8 4 12 4s8-4 12-4" stroke="#E2864A" stroke-width="3" stroke-linecap="round" />
+  </g>
+  <text x="72" y="40" font-family="Inter, Arial, sans-serif" font-size="24" fill="#7B5434" font-weight="700">Scones</text>
+</svg>

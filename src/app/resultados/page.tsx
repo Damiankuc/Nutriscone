@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { FiInbox, FiChevronLeft } from 'react-icons/fi';
 import { supabase } from '@/lib/supabase/client';
 
 import { Bar, Pie } from 'react-chartjs-2';
@@ -67,7 +68,7 @@ export default function Resultados() {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
       </div>
     );
   }
@@ -75,10 +76,10 @@ export default function Resultados() {
   if (data.length === 0) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-        <div className="text-6xl mb-4">📭</div>
+        <div className="mb-4"><FiInbox className="w-12 h-12 text-slate-400" /></div>
         <h2 className="text-2xl font-bold text-slate-800">Aún no hay respuestas</h2>
-        <p className="text-slate-500 mt-2">Comparte el código QR para empezar a recibir datos.</p>
-        <Link href="/" className="mt-8 text-emerald-600 font-medium hover:underline">Volver al inicio</Link>
+        <p className="text-slate-500 mt-2">Comparte la URL /encuesta para empezar a recibir datos.</p>
+        <Link href="/" className="mt-8 inline-flex items-center gap-2 text-accent font-medium hover:underline"><FiChevronLeft className="w-4 h-4" /> Volver al inicio</Link>
       </div>
     );
   }
@@ -158,7 +159,7 @@ export default function Resultados() {
             <p className="mt-2 text-lg text-slate-600">Análisis en tiempo real de los Scones de Garbanzo</p>
           </div>
           <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100 text-center">
-            <span className="block text-3xl font-black text-indigo-600">{total}</span>
+            <span className="block text-3xl font-black text-brand">{total}</span>
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Respuestas</span>
           </div>
         </div>

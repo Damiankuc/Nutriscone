@@ -1,6 +1,8 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
+import { FiCheckCircle } from 'react-icons/fi';
 
 const QUESTIONS = [
   { id: 'color', label: '1. ¿Cómo considera el color del producto?', scale: ['Muy desagradable', 'Desagradable', 'Neutro', 'Agradable', 'Muy agradable'] },
@@ -27,6 +29,7 @@ export default function Encuesta() {
 
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const router = useRouter();
 
   const handleChange = (field: string, value: number | boolean | string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -67,13 +70,23 @@ export default function Encuesta() {
     }
   };
 
+  useEffect(() => {
+    if (status === 'success') {
+      const timeoutId = setTimeout(() => {
+        router.push('/');
+      }, 5000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [status, router]);
+
   if (status === 'success') {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-xl p-10 max-w-md w-full text-center">
-          <div className="text-6xl mb-6">🎉</div>
+          <div className="mb-6 flex items-center justify-center"><FiCheckCircle className="w-16 h-16 text-emerald-500" /></div>
           <h2 className="text-3xl font-bold text-slate-800 mb-4">¡Gracias por participar!</h2>
           <p className="text-slate-600 text-lg">Tus respuestas han sido registradas exitosamente y nos ayudarán a mejorar.</p>
+          <p className="text-sm text-slate-500 mt-4">Serás redirigido al menú principal en 5 segundos...</p>
         </div>
       </div>
     );
@@ -100,7 +113,7 @@ export default function Encuesta() {
                       key={value}
                       className={`
                         relative flex flex-col items-center p-4 cursor-pointer rounded-2xl border-2 transition-all
-                        ${isSelected ? 'border-indigo-600 bg-indigo-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
+                        ${isSelected ? 'border-brand bg-brand-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
                       `}
                     >
                       <input 
@@ -119,34 +132,33 @@ export default function Encuesta() {
             </div>
           ))}
 
-          {/* Pregunta 8 - Boolean */}
           <div className="bg-white rounded-3xl shadow-md p-8 transition hover:shadow-lg">
             <h3 className="text-xl font-semibold text-slate-800 mb-6">8. ¿Consumiría nuevamente este producto?</h3>
             <div className="grid grid-cols-2 gap-4">
-              <label 
+              <label
                 className={`
                   relative flex items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all
                   ${formData.consumiria_nuevamente === true ? 'border-emerald-500 bg-emerald-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
                 `}
               >
-                <input 
-                  type="radio" 
-                  name="consumiria_nuevamente" 
+                <input
+                  type="radio"
+                  name="consumiria_nuevamente"
                   className="sr-only"
                   onChange={() => handleChange('consumiria_nuevamente', true)}
                 />
                 <span className={`text-lg font-bold ${formData.consumiria_nuevamente === true ? 'text-emerald-700' : 'text-slate-700'}`}>Sí</span>
               </label>
-              
-              <label 
+
+              <label
                 className={`
                   relative flex items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all
                   ${formData.consumiria_nuevamente === false ? 'border-rose-500 bg-rose-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
                 `}
               >
-                <input 
-                  type="radio" 
-                  name="consumiria_nuevamente" 
+                <input
+                  type="radio"
+                  name="consumiria_nuevamente"
                   className="sr-only"
                   onChange={() => handleChange('consumiria_nuevamente', false)}
                 />
@@ -181,7 +193,7 @@ export default function Encuesta() {
               disabled={status === 'submitting'}
               className={`
                 px-10 py-4 rounded-xl text-white font-bold text-lg shadow-xl transition-all
-                ${status === 'submitting' ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-200 hover:-translate-y-1'}
+                ${status === 'submitting' ? 'bg-brand/60 cursor-not-allowed' : 'btn-brand btn-hover-opacity hover:shadow-brand hover:-translate-y-1'}
               `}
             >
               {status === 'submitting' ? 'Enviando...' : 'Enviar Respuestas'}

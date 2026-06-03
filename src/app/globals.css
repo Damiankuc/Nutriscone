@@ -3,6 +3,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Brand colors provided */
+  --brand-bg: #FBF4E4; /* light */
+  --brand-primary: #7B5434; /* dark brown */
+  --brand-accent: #E2864A; /* orange accent */
+  --brand-secondary: #C4B687; /* muted */
+
+  --brand-text-on-primary: #ffffff;
 }
 
 @theme inline {
@@ -20,7 +28,23 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--brand-bg);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Simple utility classes to use brand colors without changing Tailwind config */
+.text-brand { color: var(--brand-primary); }
+.bg-brand { background-color: var(--brand-primary); }
+.bg-brand-accent { background-color: var(--brand-accent); }
+.text-accent { color: var(--brand-accent); }
+.text-secondary { color: var(--brand-secondary); }
+.border-brand { border-color: var(--brand-primary); }
+.border-accent { border-color: var(--brand-accent); }
+.bg-brand-50 { background-color: rgba(123,84,52,0.06); }
+.shadow-brand { box-shadow: 0 10px 20px rgba(123,84,52,0.08); }
+.shadow-accent { box-shadow: 0 10px 20px rgba(226,134,74,0.08); }
+.btn-brand { background-color: var(--brand-primary); color: var(--brand-text-on-primary); }
+.btn-accent { background-color: var(--brand-accent); color: var(--brand-text-on-primary); }
+.btn-hover-opacity:hover { opacity: 0.95; }
+
