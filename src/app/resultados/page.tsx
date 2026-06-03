@@ -35,8 +35,23 @@ type SurveyResponse = {
 export default function Resultados() {
   const [data, setData] = useState<SurveyResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [authError, setAuthError] = useState('');
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === 'nutriscone2026') {
+      setIsAuthenticated(true);
+      setAuthError('');
+    } else {
+      setAuthError('Contraseña incorrecta');
+    }
+  };
 
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     const fetchData = async () => {
       const { data: responses, error } = await supabase
         .from('survey_responses')
@@ -63,9 +78,48 @@ export default function Resultados() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [isAuthenticated]);
 
   // fetchData se declara dentro del efecto para evitar acceder a la función antes de su definición.
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-lg p-8 max-w-md w-full border border-slate-100">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">🔒</span>
+            </div>
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Acceso Restringido</h1>
+            <p className="text-slate-500">Ingresa la contraseña para ver los resultados</p>
+          </div>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="Contraseña"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+              />
+              {authError && <p className="text-rose-500 text-sm mt-2 font-medium">{authError}</p>}
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-md hover:shadow-lg"
+            >
+              Ingresar al Dashboard
+            </button>
+          </form>
+          <div className="mt-6 text-center">
+            <Link href="/" className="text-sm text-slate-500 hover:text-slate-800 transition-colors font-medium">
+              ← Volver al inicio
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
