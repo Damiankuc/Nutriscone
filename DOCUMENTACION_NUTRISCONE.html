@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación Nutriscone - Ingeniería de Software II</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            line-height: 2;
+            margin: 2.54cm; /* APA Margins */
+            color: #333;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1, h2, h3 {
+            line-height: 1.2;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24pt;
+        }
+        h2 {
+            font-size: 18pt;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.2em;
+        }
+        h3 {
+            font-size: 14pt;
+        }
+        p {
+            text-align: justify;
+            text-indent: 1.27cm;
+            margin-bottom: 1em;
+        }
+        .no-indent {
+            text-indent: 0;
+        }
+        .portada {
+            text-align: center;
+            margin-bottom: 5cm;
+            margin-top: 5cm;
+        }
+        .portada h1 {
+            margin-bottom: 2cm;
+        }
+        .integrantes {
+            margin-top: 2cm;
+            font-size: 14pt;
+        }
+        ul {
+            margin-left: 2cm;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+            margin: 2em 0;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portada">
+        <h1>Documentación del Proyecto: Nutriscone (Scones-Scoring)</h1>
+        <p class="no-indent"><strong>Asignatura:</strong> Ingeniería de Software II</p>
+        <p class="no-indent"><strong>Carrera:</strong> Ingeniería en Sistemas de Información</p>
+        <p class="no-indent"><strong>Integrantes:</strong></p>
+        <div class="integrantes">
+            Meza Santiago Exequiel<br>
+            Valentino Codermatz<br>
+            Damian Caminos<br>
+            Francisco Sosa
+        </div>
+        <p class="no-indent" style="margin-top: 3cm;">9 de Junio de 2026</p>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h2>1. Introducción</h2>
+    <p>
+        El proyecto Nutriscone (Scones-Scoring) surge como una solución tecnológica para la recolección y análisis de datos en eventos de evaluación sensorial (degustaciones). Tradicionalmente, la recolección de datos en estas actividades se realiza de forma manual o mediante herramientas genéricas que no ofrecen retroalimentación en tiempo real ni integración directa con procesos de análisis estadístico. Nutriscone resuelve esta problemática mediante una plataforma web full-stack que facilita la captura de respuestas a través de códigos QR y la visualización instantánea de resultados en un dashboard dinámico.
+    </p>
+
+    <h2>2. Descripción del Proyecto</h2>
+    <p>
+        Scones-Scoring es una aplicación diseñada para optimizar la experiencia de usuario tanto para el encuestado como para el analista. La aplicación permite generar códigos QR que dirigen a los usuarios a un formulario de evaluación sensorial optimizado para dispositivos móviles. Los datos recolectados se almacenan de forma segura en una base de datos serverless y se procesan para mostrar promedios, tendencias y distribuciones en un panel de control accesible para los organizadores.
+    </p>
+
+    <h3>2.1. Objetivos del Sistema</h3>
+    <ul>
+        <li><strong>Facilitar el acceso:</strong> Eliminar barreras de entrada mediante el uso de códigos QR.</li>
+        <li><strong>Optimizar la recolección:</strong> Ofrecer una interfaz intuitiva y rápida para la carga de datos sensoriales.</li>
+        <li><strong>Visualización en tiempo real:</strong> Proporcionar herramientas gráficas para el análisis inmediato de los resultados.</li>
+        <li><strong>Garantizar la integridad:</strong> Asegurar que los datos se almacenen de forma persistente y bajo normativas de seguridad.</li>
+    </ul>
+
+    <h2>3. Requerimientos del Sistema</h2>
+
+    <h3>3.1. Requerimientos Funcionales (RF)</h3>
+    <p>
+        El sistema cumple con los siguientes requerimientos clave:
+    </p>
+    <ul>
+        <li><strong>RF01 (Acceso QR):</strong> Generación de códigos QR dinámicos para acceso a la encuesta.</li>
+        <li><strong>RF02 (Interfaz Mobile):</strong> Diseño adaptativo para dispositivos móviles.</li>
+        <li><strong>RF03 (Evaluación Sensorial):</strong> Captura de datos sobre sabor, olor, textura y apariencia.</li>
+        <li><strong>RF04 (Persistencia):</strong> Almacenamiento en base de datos PostgreSQL (vía Supabase).</li>
+        <li><strong>RF06 (Dashboard Realtime):</strong> Actualización automática de estadísticas mediante WebSockets/Realtime.</li>
+        <li><strong>RF07 (Contador de Respuestas):</strong> Visualización del volumen total de datos recolectados.</li>
+    </ul>
+
+    <h3>3.2. Requerimientos No Funcionales (RNF)</h3>
+    <ul>
+        <li><strong>RNF01 (Responsive):</strong> Uso de Tailwind CSS v4 para garantizar compatibilidad con múltiples pantallas.</li>
+        <li><strong>RNF04 (Usabilidad):</strong> Flujo de usuario simplificado para minimizar el tiempo de respuesta.</li>
+        <li><strong>RNF06 (Seguridad):</strong> Implementación de Row Level Security (RLS) en la base de datos.</li>
+        <li><strong>RNF09 (Arquitectura):</strong> Estructura modular basada en Next.js App Router.</li>
+    </ul>
+
+    <h2>4. Arquitectura y Tecnologías</h2>
+    <p>
+        La solución adopta una arquitectura de aplicaciones web modernas con un enfoque serverless y de componentes.
+    </p>
+    <p>
+        <strong>Frontend:</strong> Next.js 16.2 & React 19, Tailwind CSS v4, Chart.js.
+    </p>
+    <p>
+        <strong>Backend & Persistencia:</strong> Supabase (PostgreSQL), TypeScript.
+    </p>
+    <p>
+        <strong>Infraestructura & DevOps:</strong> Docker, Playwright (E2E), k6 (Load Testing).
+    </p>
+
+    <h2>5. Implementación y Desarrollo</h2>
+    <p>
+        El desarrollo se ha llevado a cabo siguiendo principios de agilidad y modularidad. La estructura del proyecto está organizada en módulos claros: <code>src/app/</code> para las rutas, <code>src/lib/</code> para la lógica compartida y <code>tests/</code> para la validación continua.
+    </p>
+
+    <h2>6. Pruebas y Performance</h2>
+    <p>
+        Se han establecido protocolos de validación rigurosos, incluyendo pruebas End-to-End con Playwright y auditorías de performance con Lighthouse para garantizar que la aplicación sea rápida (tiempos de carga menores a 3 segundos) y robusta ante la concurrencia de usuarios.
+    </p>
+
+    <h2>7. Conclusión</h2>
+    <p>
+        Nutriscone representa una modernización necesaria en los procesos de evaluación sensorial. Gracias al uso de tecnologías de vanguardia como Next.js y Supabase, el sistema ofrece una experiencia de usuario fluida, segura y escalable. El cumplimiento de los requerimientos demuestra la viabilidad técnica del proyecto y establece una base sólida para futuras expansiones.
+    </p>
+
+    <hr>
+    <p class="no-indent" style="text-align: center;">
+        <strong>Firmado:</strong><br>
+        Grupo de Ingeniería de Software II<br>
+        9 de Junio de 2026
+    </p>
+
+</body>
+</html>

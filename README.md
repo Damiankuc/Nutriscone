@@ -106,5 +106,3 @@ Caminos, Roberto Damian - Database
 Meza, Santiago - Backend developter
 Sosa Wilka, Francisco - Tester
 Codermatz, Valentino - Frontend
-
-
