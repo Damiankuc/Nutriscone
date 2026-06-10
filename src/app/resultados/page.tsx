@@ -85,7 +85,7 @@ export default function Resultados() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#FBF4E4] flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-lg p-8 max-w-md w-full border border-slate-100">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand/20">
@@ -124,7 +124,7 @@ export default function Resultados() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FBF4E4] flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
       </div>
     );
@@ -132,7 +132,7 @@ export default function Resultados() {
 
   if (data.length === 0) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-[#FBF4E4] flex flex-col items-center justify-center p-4">
         <div className="mb-4"><FiInbox className="w-12 h-12 text-slate-400" /></div>
         <h2 className="text-2xl font-bold text-slate-800">Aún no hay respuestas</h2>
         <p className="text-slate-500 mt-2">Comparte la URL /encuesta para empezar a recibir datos.</p>
@@ -240,7 +240,7 @@ export default function Resultados() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FBF4E4] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-end mb-12">
           <div>
@@ -298,7 +298,7 @@ export default function Resultados() {
         <div className="mt-8 bg-white rounded-3xl shadow-lg p-8">
           <h2 className="text-2xl font-bold text-slate-800 mb-6">Análisis de Precio de Venta (Porción 3 scones)</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-slate-50 rounded-2xl p-6 text-center border border-slate-100 flex flex-col justify-center">
+            <div className="bg-white rounded-2xl p-6 text-center border border-[#C4B687]/40 flex flex-col justify-center">
               <span className="block text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Mínimo</span>
               <span className="text-3xl font-black text-slate-700">${minPagaria.toLocaleString('es-AR')}</span>
             </div>
@@ -307,7 +307,7 @@ export default function Resultados() {
               <span className="text-4xl font-black text-brand">${Math.round(averagePagaria).toLocaleString('es-AR')}</span>
               <p className="text-xs text-brand mt-2 opacity-80">*Filtrando valores atípicos (outliers) extremos</p>
             </div>
-            <div className="bg-slate-50 rounded-2xl p-6 text-center border border-slate-100 flex flex-col justify-center">
+            <div className="bg-white rounded-2xl p-6 text-center border border-[#C4B687]/40 flex flex-col justify-center">
               <span className="block text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Máximo</span>
               <span className="text-3xl font-black text-slate-700">${maxPagaria.toLocaleString('es-AR')}</span>
             </div>
@@ -323,7 +323,7 @@ export default function Resultados() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {comentariosList.map((comentario, index) => (
-                <div key={index} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm relative">
+                <div key={index} className="bg-white rounded-2xl p-6 border border-[#C4B687]/40 shadow-sm relative">
                   <div className="text-6xl text-brand absolute -top-2 left-2 font-serif opacity-20">"</div>
                   <p className="text-slate-700 italic relative z-10 pt-4 leading-relaxed">{comentario}</p>
                 </div>
