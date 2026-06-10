@@ -106,7 +106,7 @@ export default function Encuesta() {
     <div className="min-h-screen bg-[#FBF4E4] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="mb-6">
-          <Link href="/" className="inline-flex items-center text-slate-500 hover:text-brand transition-colors font-medium">
+          <Link href="/" className="inline-flex items-center bg-white px-5 py-2.5 rounded-xl shadow-sm border border-[#C4B687]/50 text-slate-600 hover:text-[#7B5434] hover:bg-[#FBF4E4] transition-all font-bold">
             <FiChevronLeft className="mr-1 w-5 h-5" /> Volver al inicio
           </Link>
         </div>
