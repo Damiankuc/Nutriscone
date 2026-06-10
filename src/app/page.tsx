@@ -28,7 +28,7 @@ export default function Home() {
               Simular Encuesta
             </Link>
             <p className="mt-4 text-sm text-slate-600 text-center">
-              te llevará menos de 3 minutos
+              Te llevará menos de 3 minutos
             </p>
           </div>
 
@@ -44,7 +44,7 @@ export default function Home() {
               Ver Dashboard
             </Link>
             <p className="mt-4 text-sm text-slate-600 text-center">
-              conoce los resultados
+              Conoce los resultados
             </p>
           </div>
         </div>

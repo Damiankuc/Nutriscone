@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
-import { FiCheckCircle } from 'react-icons/fi';
+import { FiCheckCircle, FiChevronLeft } from 'react-icons/fi';
 
 const QUESTIONS = [
   { id: 'color', label: '1. ¿Cómo considera el color del producto?', scale: ['Muy desagradable', 'Desagradable', 'Neutro', 'Agradable', 'Muy agradable'] },
@@ -104,6 +105,11 @@ export default function Encuesta() {
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
+        <div className="mb-6">
+          <Link href="/" className="inline-flex items-center text-slate-500 hover:text-brand transition-colors font-medium">
+            <FiChevronLeft className="mr-1 w-5 h-5" /> Volver al inicio
+          </Link>
+        </div>
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-4">Evaluación de Producto</h1>
           <p className="text-lg text-slate-600">Scones de Garbanzo</p>
@@ -225,12 +231,12 @@ export default function Encuesta() {
                   value={formData.cuanto_pagaria as string}
                   onChange={(e) => {
                     const value = e.target.value;
-                    if (value === '' || /^[0-9]+$/.test(value)) {
+                    if (value === '' || (/^[0-9]+$/.test(value) && parseInt(value) <= 10000)) {
                       handleChange('cuanto_pagaria', value);
                     }
                   }}
                   placeholder="0"
-                  className="w-full pl-8 pr-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 text-slate-800 font-bold placeholder-slate-400"
+                  className="w-full pl-8 pr-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-[#E2864A] focus:outline-none focus:ring-2 focus:ring-[#E2864A]/30 text-slate-800 font-bold placeholder-slate-400"
                 />
               </div>
             </div>
@@ -245,7 +251,7 @@ export default function Encuesta() {
               onChange={(e) => handleChange('comentarios', e.target.value)}
               placeholder="Comparte tus opiniones, sugerencias o comentarios..."
               rows={4}
-              className="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 text-slate-800 placeholder-slate-400 resize-none"
+              className="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-[#E2864A] focus:outline-none focus:ring-2 focus:ring-[#E2864A]/30 text-slate-800 placeholder-slate-400 resize-none"
             />
             <p className="text-xs text-slate-500 mt-2">Máximo 500 caracteres</p>
           </div>

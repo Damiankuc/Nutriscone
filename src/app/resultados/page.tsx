@@ -88,8 +88,8 @@ export default function Resultados() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-lg p-8 max-w-md w-full border border-slate-100">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🔒</span>
+            <div className="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand/20">
+              <span className="text-2xl text-brand">🔒</span>
             </div>
             <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Acceso Restringido</h1>
             <p className="text-slate-500">Ingresa la contraseña para ver los resultados</p>
@@ -101,13 +101,13 @@ export default function Resultados() {
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
                 placeholder="Contraseña"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#7B5434] focus:border-[#7B5434] transition-all outline-none placeholder-slate-500 text-slate-800"
               />
               {authError && <p className="text-rose-500 text-sm mt-2 font-medium">{authError}</p>}
             </div>
             <button
               type="submit"
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-md hover:shadow-lg"
+              className="w-full btn-brand btn-hover-opacity py-3 px-4 rounded-xl transition-colors shadow-md hover:shadow-lg font-bold"
             >
               Ingresar al Dashboard
             </button>
@@ -217,8 +217,8 @@ export default function Resultados() {
           promedios.sabor_garbanzo,
           promedios.aceptacion_global,
         ],
-        backgroundColor: 'rgba(52, 211, 153, 0.7)', // Emerald-400
-        borderColor: 'rgba(16, 185, 129, 1)',       // Emerald-500
+        backgroundColor: 'rgba(226, 134, 74, 0.8)', // brand-accent
+        borderColor: 'rgba(226, 134, 74, 1)',       // brand-accent solid
         borderWidth: 1,
         borderRadius: 8,
       },
@@ -231,8 +231,8 @@ export default function Resultados() {
       {
         data: [consumiriaSi, consumiriaNo],
         backgroundColor: [
-          'rgba(52, 211, 153, 0.8)', // Emerald
-          'rgba(244, 63, 94, 0.8)',  // Rose
+          'rgba(123, 84, 52, 0.9)', // brand-primary
+          'rgba(196, 182, 135, 0.9)', // brand-secondary
         ],
         borderWidth: 0,
       },
@@ -302,10 +302,10 @@ export default function Resultados() {
               <span className="block text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Mínimo</span>
               <span className="text-3xl font-black text-slate-700">${minPagaria.toLocaleString('es-AR')}</span>
             </div>
-            <div className="bg-emerald-50 rounded-2xl p-6 text-center border border-emerald-100 shadow-sm transform scale-105 flex flex-col justify-center">
-              <span className="block text-sm font-semibold text-emerald-600 uppercase tracking-wider mb-2">Promedio Estimado*</span>
-              <span className="text-4xl font-black text-emerald-700">${Math.round(averagePagaria).toLocaleString('es-AR')}</span>
-              <p className="text-xs text-emerald-500 mt-2">*Filtrando valores atípicos (outliers) extremos</p>
+            <div className="bg-brand-50 rounded-2xl p-6 text-center border border-brand/30 shadow-sm transform scale-105 flex flex-col justify-center">
+              <span className="block text-sm font-semibold text-brand uppercase tracking-wider mb-2">Promedio Estimado*</span>
+              <span className="text-4xl font-black text-brand">${Math.round(averagePagaria).toLocaleString('es-AR')}</span>
+              <p className="text-xs text-brand mt-2 opacity-80">*Filtrando valores atípicos (outliers) extremos</p>
             </div>
             <div className="bg-slate-50 rounded-2xl p-6 text-center border border-slate-100 flex flex-col justify-center">
               <span className="block text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Máximo</span>
@@ -324,7 +324,7 @@ export default function Resultados() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {comentariosList.map((comentario, index) => (
                 <div key={index} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm relative">
-                  <div className="text-6xl text-indigo-100 absolute -top-2 left-2 font-serif opacity-50">"</div>
+                  <div className="text-6xl text-brand absolute -top-2 left-2 font-serif opacity-20">"</div>
                   <p className="text-slate-700 italic relative z-10 pt-4 leading-relaxed">{comentario}</p>
                 </div>
               ))}
