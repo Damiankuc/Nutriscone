@@ -91,9 +91,9 @@ export default function Encuesta() {
 
   if (status === 'success') {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#FBF4E4] flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-xl p-10 max-w-md w-full text-center">
-          <div className="mb-6 flex items-center justify-center"><FiCheckCircle className="w-16 h-16 text-emerald-500" /></div>
+          <div className="mb-6 flex items-center justify-center"><FiCheckCircle className="w-16 h-16 text-brand" /></div>
           <h2 className="text-3xl font-bold text-slate-800 mb-4">¡Gracias por participar!</h2>
           <p className="text-slate-600 text-lg">Tus respuestas han sido registradas exitosamente y nos ayudarán a mejorar.</p>
           <p className="text-sm text-slate-500 mt-4">Serás redirigido al menú principal en 5 segundos...</p>
@@ -103,7 +103,7 @@ export default function Encuesta() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FBF4E4] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="mb-6">
           <Link href="/" className="inline-flex items-center text-slate-500 hover:text-brand transition-colors font-medium">
@@ -128,7 +128,7 @@ export default function Encuesta() {
                       key={value}
                       className={`
                         relative flex flex-col items-center p-4 cursor-pointer rounded-2xl border-2 transition-all
-                        ${isSelected ? 'border-brand bg-brand-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
+                        ${isSelected ? 'border-brand bg-brand-50 shadow-md transform scale-105' : 'border-[#C4B687]/40 bg-white hover:bg-[#FBF4E4] hover:border-[#C4B687]'}
                       `}
                     >
                       <input 
@@ -153,7 +153,7 @@ export default function Encuesta() {
               <label
                 className={`
                   relative flex items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all
-                  ${formData.consumiria_nuevamente === true ? 'border-emerald-500 bg-emerald-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
+                  ${formData.consumiria_nuevamente === true ? 'border-[#7B5434] bg-[#7B5434]/10 shadow-md transform scale-105' : 'border-[#C4B687]/40 bg-white hover:bg-[#FBF4E4] hover:border-[#C4B687]'}
                 `}
               >
                 <input
@@ -162,13 +162,13 @@ export default function Encuesta() {
                   className="sr-only"
                   onChange={() => handleChange('consumiria_nuevamente', true)}
                 />
-                <span className={`text-lg font-bold ${formData.consumiria_nuevamente === true ? 'text-emerald-700' : 'text-slate-700'}`}>Sí</span>
+                <span className={`text-lg font-bold ${formData.consumiria_nuevamente === true ? 'text-[#7B5434]' : 'text-slate-700'}`}>Sí</span>
               </label>
 
               <label
                 className={`
                   relative flex items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all
-                  ${formData.consumiria_nuevamente === false ? 'border-rose-500 bg-rose-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
+                  ${formData.consumiria_nuevamente === false ? 'border-[#E2864A] bg-[#E2864A]/10 shadow-md transform scale-105' : 'border-[#C4B687]/40 bg-white hover:bg-[#FBF4E4] hover:border-[#C4B687]'}
                 `}
               >
                 <input
@@ -177,7 +177,7 @@ export default function Encuesta() {
                   className="sr-only"
                   onChange={() => handleChange('consumiria_nuevamente', false)}
                 />
-                <span className={`text-lg font-bold ${formData.consumiria_nuevamente === false ? 'text-rose-700' : 'text-slate-700'}`}>No</span>
+                <span className={`text-lg font-bold ${formData.consumiria_nuevamente === false ? 'text-[#E2864A]' : 'text-slate-700'}`}>No</span>
               </label>
             </div>
           </div>
@@ -189,7 +189,7 @@ export default function Encuesta() {
               <label 
                 className={`
                   relative flex items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all
-                  ${formData.compraria_en_bar === true ? 'border-emerald-500 bg-emerald-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
+                  ${formData.compraria_en_bar === true ? 'border-[#7B5434] bg-[#7B5434]/10 shadow-md transform scale-105' : 'border-[#C4B687]/40 bg-white hover:bg-[#FBF4E4] hover:border-[#C4B687]'}
                 `}
               >
                 <input 
@@ -198,13 +198,13 @@ export default function Encuesta() {
                   className="sr-only"
                   onChange={() => handleChange('compraria_en_bar', true)}
                 />
-                <span className={`text-lg font-bold ${formData.compraria_en_bar === true ? 'text-emerald-700' : 'text-slate-700'}`}>Sí</span>
+                <span className={`text-lg font-bold ${formData.compraria_en_bar === true ? 'text-[#7B5434]' : 'text-slate-700'}`}>Sí</span>
               </label>
               
               <label 
                 className={`
                   relative flex items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all
-                  ${formData.compraria_en_bar === false ? 'border-rose-500 bg-rose-50 shadow-md transform scale-105' : 'border-slate-100 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'}
+                  ${formData.compraria_en_bar === false ? 'border-[#E2864A] bg-[#E2864A]/10 shadow-md transform scale-105' : 'border-[#C4B687]/40 bg-white hover:bg-[#FBF4E4] hover:border-[#C4B687]'}
                 `}
               >
                 <input 
@@ -213,7 +213,7 @@ export default function Encuesta() {
                   className="sr-only"
                   onChange={() => handleChange('compraria_en_bar', false)}
                 />
-                <span className={`text-lg font-bold ${formData.compraria_en_bar === false ? 'text-rose-700' : 'text-slate-700'}`}>No</span>
+                <span className={`text-lg font-bold ${formData.compraria_en_bar === false ? 'text-[#E2864A]' : 'text-slate-700'}`}>No</span>
               </label>
             </div>
           </div>
