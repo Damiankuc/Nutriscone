@@ -25,7 +25,7 @@ export default function Home() {
               href="/encuesta" 
               className="w-full inline-flex justify-center items-center px-6 py-4 border border-transparent text-lg font-bold rounded-xl btn-brand btn-hover-opacity transition-colors shadow-lg shadow-brand"
             >
-              Simular Encuesta
+              Realizar encuesta
             </Link>
             <p className="mt-4 text-sm text-slate-600 text-center">
               Te llevará menos de 3 minutos

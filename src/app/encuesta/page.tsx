@@ -34,17 +34,22 @@ export default function Encuesta() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const router = useRouter();
 
+  const MAX_USERS = 25;
+  const [isConnecting, setIsConnecting] = useState<boolean>(true);
+  const [isWaiting, setIsWaiting] = useState<boolean>(false);
+  const [activeUsersCount, setActiveUsersCount] = useState<number>(0);
+
   const handleChange = (field: string, value: number | boolean | string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validar que todas las preguntas fueron respondidas (comentarios es opcional)
     const requiredFields = ['color', 'aroma', 'sabor', 'textura', 'nivel_salado', 'sabor_garbanzo', 'aceptacion_global', 'consumiria_nuevamente', 'compraria_en_bar'];
     const isComplete = requiredFields.every(field => formData[field] !== null);
-    
+
     if (!isComplete) {
       setErrorMessage('Por favor, completa todas las preguntas antes de enviar.');
       return;
@@ -89,6 +94,49 @@ export default function Encuesta() {
     }
   }, [status, router]);
 
+  useEffect(() => {
+    if (status === 'success') return;
+
+    const userId = Math.random().toString(36).substring(2, 15);
+    const channel = supabase.channel('survey_presence', {
+      config: { presence: { key: userId } },
+    });
+
+    channel
+      .on('presence', { event: 'sync' }, () => {
+        const state = channel.presenceState();
+        let count = 0;
+        const users = [];
+
+        for (const id in state) {
+          count++;
+          // @ts-ignore
+          const userState = state[id][0];
+          if (userState) {
+            users.push({ id, online_at: userState.online_at });
+          }
+        }
+
+        setActiveUsersCount(count);
+        users.sort((a, b) => new Date(a.online_at).getTime() - new Date(b.online_at).getTime());
+
+        const myIndex = users.findIndex(u => u.id === userId);
+        if (myIndex !== -1) {
+          setIsWaiting(myIndex >= MAX_USERS);
+          setIsConnecting(false);
+        }
+      })
+      .subscribe(async (subStatus) => {
+        if (subStatus === 'SUBSCRIBED') {
+          await channel.track({ online_at: new Date().toISOString() });
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [status]);
+
   if (status === 'success') {
     return (
       <div className="min-h-screen bg-[#FBF4E4] flex items-center justify-center p-4">
@@ -97,6 +145,41 @@ export default function Encuesta() {
           <h2 className="text-3xl font-bold text-slate-800 mb-4">¡Gracias por participar!</h2>
           <p className="text-slate-600 text-lg">Tus respuestas han sido registradas exitosamente y nos ayudarán a mejorar.</p>
           <p className="text-sm text-slate-500 mt-4">Serás redirigido al menú principal en 5 segundos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isConnecting && status !== 'success') {
+    return (
+      <div className="min-h-screen bg-[#FBF4E4] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E2864A]"></div>
+      </div>
+    );
+  }
+
+  if (isWaiting && status !== 'success') {
+    return (
+      <div className="min-h-screen bg-[#FBF4E4] py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
+        <div className="max-w-md w-full text-center bg-white rounded-3xl shadow-xl p-10 border border-[#C4B687]/40">
+          <div className="w-20 h-20 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-brand/20 animate-pulse">
+            <span className="text-4xl">⏳</span>
+          </div>
+          <h2 className="text-3xl font-extrabold text-[#7B5434] mb-4">Estamos recibiendo muchas respuestas</h2>
+          <p className="text-lg text-slate-600 mb-6">
+            Para garantizar la mejor experiencia, hemos habilitado una sala de espera.
+          </p>
+          <div className="bg-[#FBF4E4] rounded-2xl p-6 border border-[#C4B687]/30">
+            <p className="text-slate-800 font-bold mb-2">Por favor, no cierres esta pestaña.</p>
+            <p className="text-sm text-slate-600">
+              Ingresarás automáticamente cuando se libere un lugar. Hay <strong>{activeUsersCount}</strong> personas conectadas.
+            </p>
+          </div>
+          <div className="mt-8">
+            <Link href="/" className="inline-flex items-center text-slate-500 hover:text-[#E2864A] transition-colors font-medium">
+              ← Volver al menú principal
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -124,16 +207,16 @@ export default function Encuesta() {
                   const value = index + 1;
                   const isSelected = formData[q.id] === value;
                   return (
-                    <label 
+                    <label
                       key={value}
                       className={`
                         relative flex flex-col items-center p-4 cursor-pointer rounded-2xl border-2 transition-all
                         ${isSelected ? 'border-brand bg-brand-50 shadow-md transform scale-105' : 'border-[#C4B687]/40 bg-white hover:bg-[#FBF4E4] hover:border-[#C4B687]'}
                       `}
                     >
-                      <input 
-                        type="radio" 
-                        name={q.id} 
+                      <input
+                        type="radio"
+                        name={q.id}
                         value={value}
                         className="sr-only"
                         onChange={() => handleChange(q.id, value)}
@@ -186,30 +269,30 @@ export default function Encuesta() {
           <div className="bg-white rounded-3xl shadow-md p-8 transition hover:shadow-lg">
             <h3 className="text-xl font-semibold text-slate-800 mb-6">9. ¿Compraría este producto en el bar de la cuenca?</h3>
             <div className="grid grid-cols-2 gap-4">
-              <label 
+              <label
                 className={`
                   relative flex items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all
                   ${formData.compraria_en_bar === true ? 'border-[#7B5434] bg-[#7B5434]/10 shadow-md transform scale-105' : 'border-[#C4B687]/40 bg-white hover:bg-[#FBF4E4] hover:border-[#C4B687]'}
                 `}
               >
-                <input 
-                  type="radio" 
-                  name="compraria_en_bar" 
+                <input
+                  type="radio"
+                  name="compraria_en_bar"
                   className="sr-only"
                   onChange={() => handleChange('compraria_en_bar', true)}
                 />
                 <span className={`text-lg font-bold ${formData.compraria_en_bar === true ? 'text-[#7B5434]' : 'text-slate-700'}`}>Sí</span>
               </label>
-              
-              <label 
+
+              <label
                 className={`
                   relative flex items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all
                   ${formData.compraria_en_bar === false ? 'border-[#E2864A] bg-[#E2864A]/10 shadow-md transform scale-105' : 'border-[#C4B687]/40 bg-white hover:bg-[#FBF4E4] hover:border-[#C4B687]'}
                 `}
               >
-                <input 
-                  type="radio" 
-                  name="compraria_en_bar" 
+                <input
+                  type="radio"
+                  name="compraria_en_bar"
                   className="sr-only"
                   onChange={() => handleChange('compraria_en_bar', false)}
                 />
