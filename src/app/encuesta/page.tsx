@@ -34,7 +34,7 @@ export default function Encuesta() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const router = useRouter();
 
-  const MAX_USERS = 25;
+  const MAX_USERS = 30; // TEMPORAL: Puesto en 0 para forzar la sala de espera
   const [isConnecting, setIsConnecting] = useState<boolean>(true);
   const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const [activeUsersCount, setActiveUsersCount] = useState<number>(0);
