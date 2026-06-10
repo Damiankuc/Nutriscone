@@ -8,7 +8,7 @@ export default function Home() {
       <div className="max-w-5xl w-full space-y-12 text-center">
         <div>
           <img
-            src="/logo_nutriscone.jpeg"
+            src="/logo_Nutriscone.jpeg"
             alt="Nutriscone Logo"
             className="mx-auto mb-10 max-h-56 w-auto rounded-3xl shadow-2xl"
             onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo.svg'; }}
