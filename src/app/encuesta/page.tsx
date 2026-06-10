@@ -106,13 +106,13 @@ export default function Encuesta() {
       .on('presence', { event: 'sync' }, () => {
         const state = channel.presenceState();
         let count = 0;
-        const users = [];
+        const users: { id: string; online_at: string }[] = [];
 
         for (const id in state) {
           count++;
           // @ts-ignore
-          const userState = state[id][0];
-          if (userState) {
+          const userState = state[id][0] as any;
+          if (userState && userState.online_at) {
             users.push({ id, online_at: userState.online_at });
           }
         }
