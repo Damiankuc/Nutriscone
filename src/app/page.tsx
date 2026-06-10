@@ -4,7 +4,7 @@ import { FiEdit, FiBarChart } from 'react-icons/fi';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FBF4E4] flex flex-col items-center py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl w-full space-y-12 text-center">
         <div>
           <img
