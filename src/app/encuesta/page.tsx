@@ -150,7 +150,7 @@ export default function Encuesta() {
     );
   }
 
-  if (isConnecting && status !== 'success') {
+  if (isConnecting) {
     return (
       <div className="min-h-screen bg-[#FBF4E4] flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#E2864A]"></div>
@@ -158,7 +158,7 @@ export default function Encuesta() {
     );
   }
 
-  if (isWaiting && status !== 'success') {
+  if (isWaiting) {
     return (
       <div className="min-h-screen bg-[#FBF4E4] py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
         <div className="max-w-md w-full text-center bg-white rounded-3xl shadow-xl p-10 border border-[#C4B687]/40">

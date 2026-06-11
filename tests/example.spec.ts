@@ -2,5 +2,5 @@ import { test, expect } from '@playwright/test';
 
 test('has title', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveTitle(/Next App/i); // Expect 'Create Next App' default title
+  await expect(page).toHaveTitle(/Nutriscone/i); // Expect 'Nutriscone' title
 });
