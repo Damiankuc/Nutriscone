@@ -357,7 +357,7 @@ export default function Resultados() {
                     pointLabels: {
                       font: {
                         size: 16,
-                        weight: '600',
+                        weight: 600,
                       },
                     },
                   },
