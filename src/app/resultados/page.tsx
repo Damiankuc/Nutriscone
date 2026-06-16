@@ -4,19 +4,35 @@ import Link from 'next/link';
 import { FiInbox, FiChevronLeft } from 'react-icons/fi';
 import { supabase } from '@/lib/supabase/client';
 
-import { Bar, Pie } from 'react-chartjs-2';
+import { Bar, Pie, Radar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
   Title,
   Tooltip,
   Legend,
   ArcElement,
 } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 type SurveyResponse = {
   id: string;
@@ -209,13 +225,13 @@ export default function Resultados() {
       {
         label: 'Promedio de Evaluación (1 al 5)',
         data: [
-          promedios.color,
-          promedios.aroma,
-          promedios.sabor,
-          promedios.textura,
-          promedios.nivel_salado,
-          promedios.sabor_garbanzo,
-          promedios.aceptacion_global,
+          Number(promedios.color),
+          Number(promedios.aroma),
+          Number(promedios.sabor),
+          Number(promedios.textura),
+          Number(promedios.nivel_salado),
+          Number(promedios.sabor_garbanzo),
+          Number(promedios.aceptacion_global),
         ],
         backgroundColor: 'rgba(226, 134, 74, 0.8)', // brand-accent
         borderColor: 'rgba(226, 134, 74, 1)',       // brand-accent solid
@@ -237,6 +253,36 @@ export default function Resultados() {
         borderWidth: 0,
       },
     ],
+  };
+
+  const radarChartData = {
+    labels: [
+      'Color',
+      'Aroma',
+      'Sabor',
+      'Textura',
+      'Nivel de Sal',
+      'Sabor Garbanzo',
+      'Aceptación Global',
+    ],
+    datasets: [
+      {
+        label: 'Perfil sensorial (1-5)',
+        data: [
+          Number(promedios.color),
+          Number(promedios.aroma),
+          Number(promedios.sabor),
+          Number(promedios.textura),
+          Number(promedios.nivel_salado),
+          Number(promedios.sabor_garbanzo),
+          Number(promedios.aceptacion_global),
+        ],
+        backgroundColor: 'rgba(123, 84, 52, 0.12)',
+        borderColor: 'rgba(123, 84, 52, 0.9)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(123, 84, 52, 0.9)'
+      }
+    ]
   };
 
   return (
@@ -268,7 +314,7 @@ export default function Resultados() {
                     y: { beginAtZero: true, max: 5 },
                   },
                   plugins: {
-                    legend: { display: false }
+                    legend: { display: false, labels: { font: { size: 14 } } }
                   }
                 }} 
               />
@@ -285,13 +331,41 @@ export default function Resultados() {
                   responsive: true,
                   maintainAspectRatio: false,
                   plugins: {
-                    legend: { position: 'bottom' }
+                    legend: { position: 'bottom', labels: { font: { size: 14 } } }
                   }
                 }}
               />
             </div>
           </div>
 
+        </div>
+
+        {/* Gráfico Radar - Perfil Sensorial */}
+        <div className="mt-8 bg-white rounded-3xl shadow-lg p-8">
+          <h2 className="text-2xl font-bold text-slate-800 mb-6">Perfil Sensorial (Radar)</h2>
+          <div className="h-80">
+            <Radar
+              data={radarChartData}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  r: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: { stepSize: 1 },
+                    pointLabels: {
+                      font: {
+                        size: 16,
+                        weight: '600',
+                      },
+                    },
+                  },
+                },
+                plugins: { legend: { position: 'bottom', labels: { font: { size: 14 } } } },
+              }}
+            />
+          </div>
         </div>
 
         {/* Sección de Precio Dispuesto a Pagar */}
